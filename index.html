@@ -8,7 +8,60 @@
 <body>
     <main>
         <div id="wrap">
-            <div class="filter"></div>
+            <div class="filter">
+                <div class="logo">
+                    <span>Friends</span>
+                    <span class="logo-app">app</span>
+                </div>
+                <ul>
+                    <li>
+                        <div class="filter-title">by Gender:</div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <div>
+                                        <fieldset id="gender">
+                                            <label>
+                                                <input type="radio" name="gender">
+                                                Male
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="gender">
+                                                Female
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="gender" checked>
+                                                Both
+                                            </label>
+                                        </fieldset>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="filter-title">by Alphabet:</div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <div>
+                                        <fieldset id="alphabet">
+                                            <label>
+                                                <input type="radio" name="alphabet" checked>
+                                                Ascending
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="alphabet">
+                                                Descending
+                                            </label>
+                                        </fieldset>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
             <div class="friendlist"></div>
         </div>
     </main>

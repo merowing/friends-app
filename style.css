@@ -3,6 +3,8 @@ body {
     padding: 0;
     margin: 0;
     min-height: 100%;
+}
+html {
     height: 100%;
 }
 body {
@@ -34,10 +36,70 @@ footer span {
     height: 100%;
     z-index: 1;
     box-sizing: border-box;
-    border-right: 1px solid lightgray;
+    //border-right: 1px solid lightgray;
+    padding: 0 10px;
 }
 
 .friendlist {
     width: 100%;
     margin-left: 260px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+ul li {
+    margin-bottom: 10px;
+}
+
+fieldset {
+    border: 0;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+fieldset label {
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 0;
+}
+fieldset input {
+    vertical-align: middle;
+    padding: 0;
+    margin: 0;
+    height: 18px;
+    float: left;
+    margin-right: 4px;
+    cursor: pointer;
+}
+.filter-title {
+    padding: 10px;
+    background-color: lightcoral;
+    color: white;
+    //border-bottom: 1px solid whitesmoke;
+    text-align: left;
+    font-weight: 700;
+    font-family: Verdana;
+    font-size: 12px;
+}
+
+.logo {
+    padding: 19px 0;
+    font-size: 0;
+    text-align: center;
+}
+.logo span {
+    margin: 0;
+    display: inline-block;
+    font-size: 26px;
+}
+.logo span.logo-app {
+    padding: 4px 12px 7px 0;
+    background-color: darkgray;
+    color: yellow;
 }
