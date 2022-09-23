@@ -83,6 +83,8 @@ function resetFilter() {
     const defaultFilterValues = ['both', 'none1', 'none2'];
 
     filterInputs.forEach(item => {
+        if(item.getAttribute("type") === "text") item.value = "";
+
         item.checked = false;
         if(defaultFilterValues.indexOf(item.id) >= 0) item.checked = true;
     });
@@ -151,16 +153,36 @@ function filterFriendList(filters) {
                 name2 = name2.slice(0, n);
 
                 const condition = (!+filters[2]) ? name1 > name2 : name2 > name1;
-                
+
                 return condition ? 1 : -1;            
             });
         }
 
         return friendList;
-
-        // friendList.reduce((friends, person) => {
-
-        // }, []);
     }
-    //console.log(filters);
+}
+
+const search = document.querySelector(".search");
+const searchClear = document.querySelector(".search-clear");
+
+let searchTimer;
+search.addEventListener("keyup", () => {
+    clearInterval(searchTimer);
+    searchClear.classList.add('visible');
+
+    searchTimer = setTimeout(() => {
+        friendList = searchFriend(search.value.toLowerCase());
+        
+        console.log(friendList);
+    }, 300);
+});
+
+searchClear.addEventListener("click", () => {
+    clearInterval(searchTimer);
+    search.value = "";
+    searchClear.classList.remove("visible");
+});
+
+function searchFriend(str) {
+    return friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(str) >= 0);
 }

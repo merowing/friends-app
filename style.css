@@ -134,7 +134,7 @@ fieldset label[for="desc"]::before {
 
 .filter-top {
     border-bottom: 1px solid lightgray;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 .filter-top > ul {
     display: flex;
@@ -159,4 +159,37 @@ fieldset label[for="desc"]::before {
 }
 .filter-top button.reset-filter:hover {
     color: lightcoral;
+}
+
+.filter-search {
+    margin-bottom: 10px;
+    position: relative;
+}
+.filter-search input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 0;
+    border-bottom: 1px solid lightgray;
+    font-size: 16px;
+    padding: 10px 0;
+    outline: none;
+    vertical-align: middle;
+}
+.search-clear {
+    position: absolute;
+    width: 38px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    font-size: 28px;
+    text-align: center;
+    line-height: 38px;
+    cursor: pointer;
+    display: none;
+}
+.search-clear::before {
+    content: '\00D7';
+}
+.search-clear.visible {
+    display: block;
 }
