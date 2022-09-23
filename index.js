@@ -60,3 +60,22 @@ function paginationTemplate() {
 function friendCardTempalte() {
 
 }
+
+const filterForm = document.querySelector('#filter-form');
+const resetFilterButton = filterForm.querySelector('.reset-filter');
+
+resetFilterButton.addEventListener('click', e => {
+    e.preventDefault();
+
+    resetForm();
+});
+
+function resetForm() {
+    const defaultFilterValues = ['both', 'none1', 'none2'];
+    const inputs = filterForm.querySelectorAll('input');
+
+    inputs.forEach(item => {
+        item.checked = false;
+        if(defaultFilterValues.indexOf(item.id) >= 0) item.checked = true;
+    });
+}
