@@ -277,3 +277,23 @@ function clearSearch() {
 function searchFriend(str = '') {
     return friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(str) >= 0);
 }
+
+const pagination = document.querySelector('.pagination');
+const paginations = pagination.querySelectorAll('li');
+const perpage = 5;
+
+pagination.addEventListener("click", e => {
+    const page = [...paginations].indexOf(e.target);
+
+    if(!paginations[page].classList.contains('active')) {
+        paginations.forEach(item => {
+            item.classList.remove('active');
+        });
+    }
+
+    paginations[page].classList.add('active');
+
+    friendList = defaultFriendList.slice();
+    friendList = friendList.splice(perpage * page, perpage);
+    createFriendCard();
+});
