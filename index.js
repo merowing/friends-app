@@ -128,11 +128,31 @@ function filterFriendList(filters) {
         if(typeof +filters[1] === 'number' && +filters[1]) {
             return (!+filters[1]) ? friendList : friendList.reverse();
         }
-
+        if(!filters[2]) return friendList;
 
         if(filters[1] === 'age') {
             friendList.sort((friend1, friend2) => {
-                return (!+filters[2] || !filters[2]) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
+                return (!+filters[2]) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
+            });
+        }
+
+        if(filters[1] === 'name') {
+            friendList.sort((friend1, friend2) => {
+
+                let name1 = friend1.name.fullname;
+                let name2 = friend2.name.fullname;
+
+                let n = 0;
+                while(name1.slice(0, n) === name2.slice(0, n)) {
+                    n += 1;
+                }
+
+                name1 = name1.slice(0, n);
+                name2 = name2.slice(0, n);
+
+                const condition = (!+filters[2]) ? name1 > name2 : name2 > name1;
+                
+                return condition ? 1 : -1;            
             });
         }
 
