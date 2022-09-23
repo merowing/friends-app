@@ -57,14 +57,16 @@ function createFriendCard() {
 
     let fragmentFriendslist = document.createDocumentFragment();
     friendList.forEach(friend => {
+        const {id, gender, picture:{large}, name:{title, fullname}, country, dob:{fulldate, age}} = friend;
         const temp = [
-            friend.id,
-            friend.gender,
-            friend.picture.large,
-            friend.name.title,
-            friend.name.fullname,
-            friend.country,
-            friend.dob.fulldate,
+            id,
+            gender,
+            large,
+            title,
+            fullname,
+            country,
+            fulldate,
+            age,
         ];
 
         const template = friendCardTempalte(temp);
@@ -79,7 +81,7 @@ function paginationTemplate() {
 }
 
 function friendCardTempalte(friends) {
-    const [id, gender, img, title, name, country, birth] = friends;
+    const [id, gender, img, title, name, country, birth, age] = friends;
 
     const template = document.createElement('li');
     template.innerHTML = `
@@ -89,7 +91,7 @@ function friendCardTempalte(friends) {
                                 <li class="friendcard-title">${title}</li>
                                 <li class="friendcard-name">${name}</li>
                                 <li class="friendcard-from">from: ${country}</li>
-                                <li class="friendcard-birth">${birth}</li>
+                                <li class="friendcard-birth">${birth} (age ${age})</li>
                             </ul>
                             <div class="friendcard-id">${(id + 1)}</div>
                             <div class="friendcard-gender"></div>
@@ -114,7 +116,9 @@ filterForm.addEventListener('change', () => {
     console.log(filters);
 
     friendList = filterFriendList(filters);
-    console.log(friendList);
+    //console.log(friendList);
+
+    createFriendCard();
 });
 
 function resetFilter() {
@@ -126,6 +130,9 @@ function resetFilter() {
         item.checked = false;
         if(defaultFilterValues.indexOf(item.id) >= 0) item.checked = true;
     });
+
+    friendList = defaultFriendList.slice();
+    createFriendCard();
 }
 
 function createFilters() {
@@ -148,7 +155,7 @@ function filterFriendList(filters) {
         return friendList.filter(friend => filters[0] === 'both' || friend.gender === filters[0]);
     }
 
-    if(filters[0] === 'both' && typeof +filters[1] === 'number' && +filters[1]) {
+    if(filters[0] === 'both' && filters.length === 2) {
         console.log(1);
             // variable next need for to keep order
             let next = 0;
