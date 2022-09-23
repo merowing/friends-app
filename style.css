@@ -42,6 +42,7 @@ footer span {
 .friendlist {
     width: 100%;
     margin-left: 260px;
+    padding: 60px 100px;
 }
 
 ul {
@@ -116,10 +117,9 @@ fieldset label[for="desc"]::before {
 }
 
 .logo {
-    padding: 19px 0;
+    padding: 20px 0;
     font-size: 0;
     text-align: center;
-    margin-bottom: 20px;
 }
 .logo span {
     margin: 0;
@@ -192,4 +192,58 @@ fieldset label[for="desc"]::before {
 }
 .search-clear.visible {
     display: block;
+}
+
+
+.friendlist > ul {
+    display: flex;
+}
+.friendlist > ul > li {
+    width: 240px;
+    height: 330px;
+    text-align: center;
+    margin-bottom: 0;
+}
+.friendcard {
+    position: relative;
+    height: 100%;
+    border: 1px solid #ff0099;
+    border-radius: 10px;
+    box-sizing: border-box;
+    cursor: default;
+}
+.friendcard > ul {
+    list-style: none;
+}
+.friendcard > ul > li {
+    margin: 0;
+}
+.friendcard img {
+    border-radius: 70px;
+    margin-top: 20px;
+}
+.friendcard-title {
+    color: lightgray;
+    padding-top: 6px;
+}
+.friendcard-name {
+    font-weight: 700;
+    font-size: 20px;
+    padding-top: 10px;
+}
+.friendcard-from {
+    color: #2c2c2c;
+    font-size: 14px;
+}
+.friendcard-birth {
+    font-style: italic;
+    color: lightgray;
+    padding-top: 10px;
+}
+.friendcard-id {
+    position: absolute;
+    right: 17px;
+    bottom: 12px;
+    font: 700 16px Arial;
+    color: lightgray
 }
