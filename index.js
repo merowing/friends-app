@@ -1,6 +1,11 @@
 let defaultFriendList = [];
 let friendList = [];
 
+const search = document.querySelector(".search");
+const searchClear = document.querySelector(".search-clear");
+
+let searchTimer;
+
 loadFriendsData();
 
 function loadFriendsData() {
@@ -113,10 +118,12 @@ resetFilterButton.addEventListener('click', e => {
 
 filterForm.addEventListener('change', () => {
     let filters = createFilters();
-    console.log(filters);
 
     friendList = filterFriendList(filters);
-    //console.log(friendList);
+
+    if(search.value) {
+        friendList = searchFriend(search.value.toLowerCase());
+    }
 
     createFriendCard();
 });
@@ -155,7 +162,7 @@ function filterFriendList(filters) {
         return friendList.filter(friend => filters[0] === 'both' || friend.gender === filters[0]);
     }
 
-    if(filters[0] === 'both' && filters.length === 2) {
+    if(filters[0] === 'both' && filters.length === 2 && !isNaN(+filters[1])) {
         console.log(1);
             // variable next need for to keep order
             let next = 0;
@@ -207,27 +214,39 @@ function filterFriendList(filters) {
     }
 }
 
-const search = document.querySelector(".search");
-const searchClear = document.querySelector(".search-clear");
-
-let searchTimer;
 search.addEventListener("keyup", () => {
     clearInterval(searchTimer);
-    searchClear.classList.add('visible');
+    if(search.value !== "") {
+        searchClear.classList.add('visible');
+    }else {
+        clearSearch();
+    }
 
     searchTimer = setTimeout(() => {
+        friendList = filterFriendList(createFilters());
         friendList = searchFriend(search.value.toLowerCase());
-        
-        console.log(friendList);
-    }, 300);
+
+        createFriendCard();
+        clearInterval(searchTimer);
+    }, 100);
 });
 
 searchClear.addEventListener("click", () => {
+    clearSearch();
+});
+
+function clearSearch() {
     clearInterval(searchTimer);
     search.value = "";
     searchClear.classList.remove("visible");
-});
 
-function searchFriend(str) {
+    //filterForm.dispatchEvent(new Event('change'));
+    friendList = defaultFriendList.slice();
+
+    friendList = filterFriendList(createFilters());
+    createFriendCard();
+}
+
+function searchFriend(str = '') {
     return friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(str) >= 0);
 }
