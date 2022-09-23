@@ -219,7 +219,7 @@ fieldset label[for="desc"]::before {
 .friendcard {
     position: relative;
     height: 100%;
-    border: 1px solid #ff0099;
+    border: 1px solid lightcoral;
     border-radius: 10px;
     box-sizing: border-box;
     cursor: default;
@@ -258,4 +258,19 @@ fieldset label[for="desc"]::before {
     bottom: 12px;
     font: 700 16px Arial;
     color: lightgray
+}
+.friendcard-gender-female,
+.friendcard-gender-male {
+    background: url('./images/gender.png') no-repeat;
+    background-position: 0px 0px;
+    background-size: cover;
+    position: absolute;
+    top: 9px;
+    left: 13px;
+    width: 17px;
+    height: 28px;
+}
+.friendcard-gender-male {
+    background-position: -17px 0px;
+    width: 21px;
 }

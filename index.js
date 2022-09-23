@@ -113,7 +113,7 @@ function friendCardTempalte(friends) {
                                 <li class="friendcard-birth">${birth} (age ${age})</li>
                             </ul>
                             <div class="friendcard-id">${(id + 1)}</div>
-                            <div class="friendcard-gender"></div>
+                            <div class="friendcard-gender-${gender}"></div>
                         </div>
                     </li>
                     `;
