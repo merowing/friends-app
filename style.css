@@ -38,6 +38,7 @@ footer span {
     box-sizing: border-box;
     padding: 0 10px;
     user-select: none;
+    overflow: auto;
 }
 
 .friendlist {
@@ -102,6 +103,7 @@ fieldset input {
     font-family: Verdana;
     font-size: 12px;
     border-radius: 30px;
+    margin-top: 20px;
 }
 fieldset label[for="desc"]::before,
 fieldset label[for="asc"]::before {
@@ -133,8 +135,17 @@ fieldset label[for="desc"]::before {
 }
 .logo span.logo-app {
     padding: 4px 12px 7px 0;
-    background-color: darkgray;
     color: yellow;
+}
+.logo .logo-cube {
+    width: 40px;
+    height: 40px;
+    background-color: darkgray;
+    transform: rotate(20deg);
+    position: absolute;
+    top: 23px;
+    right: 80px;
+    z-index: -1;
 }
 
 .filter-top {
@@ -273,4 +284,38 @@ fieldset label[for="desc"]::before {
 .friendcard-gender-male {
     background-position: -17px 0px;
     width: 21px;
+}
+
+.info {
+    position: absolute;
+    color: lightgray;
+    top: 8px;
+    font-size: 12px;
+    font-family: Consolas;
+}
+.pagination {
+    margin-bottom: 16px;
+}
+.pagination ul {
+    font-size: 0;
+}
+.pagination li {
+    color: white;
+    display: inline-block;
+    border-radius: 40px;
+    width: 34px;
+    line-height: 34px;
+    text-align: center;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    margin-right: 8px;
+    border: 1px solid lightcoral;
+    color: lightcoral;
+    user-select: none;
+}
+.pagination li.active,
+.pagination li:hover {
+    background-color: lightcoral;
+    color: white;
 }

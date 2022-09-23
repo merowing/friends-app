@@ -3,6 +3,7 @@ let friendList = [];
 
 const search = document.querySelector(".search");
 const searchClear = document.querySelector(".search-clear");
+const info = document.querySelector('.info');
 
 let searchTimer;
 
@@ -10,11 +11,15 @@ loadFriendsData();
 
 function loadFriendsData() {
     const SEED = 'abc';
-    const results = 10;
+    const results = 20;
     const listOfMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const url = `https://randomuser.me/api/?results=${results}&seed=${SEED}&exc=login,id`;
-    
+
+    let female = 0;
+    let male = 0;
+    let countries = [];
+
     fetch(url)
     .then(response => {
         if(!response.ok) return Promise.reject(response.text());
@@ -30,6 +35,12 @@ function loadFriendsData() {
             const fullname = first + ' ' + last;
             const [yearReg, monthReg, dayReg] = registeregDate.split('T')[0].split('-');
             const fullRegDate = dayReg + '.' + monthReg + '.' + yearReg;
+
+            if(gender === 'female') female += 1;
+            if(gender === 'male') male += 1;
+
+            if(countries.length === 0) countries.push(country);
+            if(!countries.some(c => c === country)) countries.push(country);
 
             allValues.push({
                 id,
@@ -48,6 +59,8 @@ function loadFriendsData() {
         friendList = defaultFriendList.slice();
 
         createFriendCard();
+
+        info.innerHTML = `seed: ${SEED}; items: ${results}; female: ${female}; male: ${male}; country: ${countries.length}`;
     })
     .catch(error => {
         console.log(error);
