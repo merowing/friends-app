@@ -36,7 +36,6 @@ footer span {
     height: 100%;
     z-index: 1;
     box-sizing: border-box;
-    //border-right: 1px solid lightgray;
     padding: 0 10px;
 }
 
@@ -56,17 +55,33 @@ ul li {
 
 fieldset {
     border: 0;
-    padding: 0 10px;
     margin: 0;
     font-size: 0;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    border-radius: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: lightcoral;
+    color: #b36161;
 }
 fieldset label {
     font-size: 16px;
     cursor: pointer;
-    padding: 10px 0;
+    padding: 8px 0;
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+}
+fieldset > div {
+    position: relative;
+    width: 100%;
+}
+fieldset label:hover,
+fieldset input:checked + label,
+fieldset label:hover::before {
+    background-color: #b36161;
+    color: white;
 }
 fieldset input {
     vertical-align: middle;
@@ -76,16 +91,30 @@ fieldset input {
     float: left;
     margin-right: 4px;
     cursor: pointer;
+    visibility: hidden;
+    position: absolute;
 }
 .filter-title {
-    padding: 10px;
-    background-color: lightcoral;
-    color: white;
-    //border-bottom: 1px solid whitesmoke;
+    padding-bottom: 10px;
     text-align: left;
     font-weight: 700;
     font-family: Verdana;
     font-size: 12px;
+    border-radius: 30px;
+}
+fieldset label[for="desc"]::before,
+fieldset label[for="asc"]::before {
+    font-size: 16px;
+    visibility: visible;
+    position: relative;
+    top: -1px;
+    left: -4px;
+}
+fieldset label[for="asc"]::before {
+    content: '\2191';
+}
+fieldset label[for="desc"]::before {
+    content: '\2193';
 }
 
 .logo {

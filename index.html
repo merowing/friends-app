@@ -15,24 +15,24 @@
                 </div>
                 <ul>
                     <li>
-                        <div class="filter-title">by Gender:</div>
+                        <div class="filter-title">Select a gender</div>
                         <div>
                             <ul>
                                 <li>
                                     <div>
                                         <fieldset id="gender">
-                                            <label>
-                                                <input type="radio" name="gender">
-                                                Male
-                                            </label>
-                                            <label>
-                                                <input type="radio" name="gender">
-                                                Female
-                                            </label>
-                                            <label>
-                                                <input type="radio" name="gender" checked>
-                                                Both
-                                            </label>
+                                            <div>
+                                                <input type="radio" id="both" name="gender" checked>
+                                                <label for="both">Both</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="male" name="gender">
+                                                <label for="male">Male</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="female" name="gender">
+                                                <label for="female">Female</label>
+                                            </div>
                                         </fieldset>
                                     </div>
                                 </li>
@@ -40,20 +40,48 @@
                         </div>
                     </li>
                     <li>
-                        <div class="filter-title">by Alphabet:</div>
+                        <div class="filter-title">Sort by</div>
                         <div>
                             <ul>
                                 <li>
                                     <div>
-                                        <fieldset id="alphabet">
-                                            <label>
-                                                <input type="radio" name="alphabet" checked>
-                                                Ascending
-                                            </label>
-                                            <label>
-                                                <input type="radio" name="alphabet">
-                                                Descending
-                                            </label>
+                                        <fieldset id="sort">
+                                            <div>
+                                                <input type="radio" id="age" name="sort">
+                                                <label for="age">Age</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="name" name="sort">
+                                                <label for="name">Name</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="none1" name="sort" checked>
+                                                <label for="none1">None</label>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <ul>
+                                <li>
+                                    <div>
+                                        <fieldset id="updown">
+                                            <div>
+                                                <input type="radio" id="asc" name="updown">
+                                                <label for="asc">Asc</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="desc" name="updown">
+                                                <label for="desc">Desc</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="none2" name="updown" checked>
+                                                <label for="none2">None</label>
+                                            </div>
                                         </fieldset>
                                     </div>
                                 </li>
