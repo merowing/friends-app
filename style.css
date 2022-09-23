@@ -16,19 +16,21 @@ footer {
     position: absolute;
     bottom: 0;
     width: 100%;
-    padding-left: 260px;
+    //padding-left: 260px;
     box-sizing: border-box;
     text-align: center;
 }
 footer span {
     font: italic 12px/40px Verdana;
     line-height: 40px;
-    margin-right: 260px;
+    //margin-right: 260px;
 }
 
 #wrap {
     display: flex;
     padding-bottom: 40px;
+    margin: 0 auto;
+    max-width: 1600px;
 }
 .filter {
     width: 260px;
@@ -40,9 +42,9 @@ footer span {
 }
 
 .friendlist {
-    width: 100%;
     margin-left: 260px;
-    padding: 60px 100px;
+    padding: 80px 40px 40px;
+    flex: 1;
 }
 
 ul {
@@ -117,9 +119,13 @@ fieldset label[for="desc"]::before {
 }
 
 .logo {
-    padding: 20px 0;
+    height: 80px;
     font-size: 0;
     text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    width: inherit;
+    padding-bottom: 20px;
 }
 .logo span {
     margin: 0;
@@ -196,13 +202,16 @@ fieldset label[for="desc"]::before {
 
 
 .friendlist > ul {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
 }
 .friendlist > ul > li {
-    width: 240px;
+    width: 244px;
     height: 330px;
     text-align: center;
     margin-bottom: 0;
+    //justify-self: center;
 }
 .friendcard {
     position: relative;

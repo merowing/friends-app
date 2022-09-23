@@ -45,20 +45,58 @@ function loadFriendsData() {
         createFriendCard();
     })
     .catch(error => {
+        console.log(error);
         error.then(data => console.log(data));
     });
 }
 
 function createFriendCard() {
     console.log(JSON.stringify(friendList));
+    const friendListBlock = document.querySelector('.friendlist > ul');
+    friendListBlock.innerHTML = "";
+
+    let fragmentFriendslist = document.createDocumentFragment();
+    friendList.forEach(friend => {
+        const temp = [
+            friend.id,
+            friend.gender,
+            friend.picture.large,
+            friend.name.title,
+            friend.name.fullname,
+            friend.country,
+            friend.dob.fulldate,
+        ];
+
+        const template = friendCardTempalte(temp);
+        fragmentFriendslist.appendChild(template);
+    });
+
+    friendListBlock.appendChild(fragmentFriendslist);
 }
 
 function paginationTemplate() {
     
 }
 
-function friendCardTempalte() {
+function friendCardTempalte(friends) {
+    const [id, gender, img, title, name, country, birth] = friends;
 
+    const template = document.createElement('li');
+    template.innerHTML = `
+                        <div class="friendcard">
+                            <img src="${img}" alt="${name}">
+                            <ul>
+                                <li class="friendcard-title">${title}</li>
+                                <li class="friendcard-name">${name}</li>
+                                <li class="friendcard-from">from: ${country}</li>
+                                <li class="friendcard-birth">${birth}</li>
+                            </ul>
+                            <div class="friendcard-id">${(id + 1)}</div>
+                            <div class="friendcard-gender"></div>
+                        </div>
+                    </li>
+                    `;
+    return template;
 }
 
 const filterForm = document.querySelector('#filter-form');
