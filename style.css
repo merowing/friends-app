@@ -39,6 +39,7 @@ footer span {
     z-index: 1;
     box-sizing: border-box;
     padding: 0 10px;
+    user-select: none;
 }
 
 .friendlist {
@@ -203,8 +204,14 @@ fieldset label[for="desc"]::before {
 
 .friendlist > ul {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 10px;
+}
+.friendlist > ul.empty {
+    grid-template-columns: 1fr;
+    height: 100px;
+    align-items: center;
+    text-align: center;
 }
 .friendlist > ul > li {
     width: 244px;

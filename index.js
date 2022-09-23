@@ -79,6 +79,20 @@ function createFriendCard() {
     });
 
     friendListBlock.appendChild(fragmentFriendslist);
+
+    if(!friendList.length) {
+        friendListBlock.classList.add('empty');
+        friendListBlock.innerHTML = "";
+        friendListBlock.appendChild(emptyFriendList());
+    }else {
+        friendListBlock.classList.remove('empty');
+    }
+}
+
+function emptyFriendList() {
+    const div = document.createElement('div');
+    div.innerText = 'Friends not found!';
+    return div;
 }
 
 function paginationTemplate() {
