@@ -62,20 +62,85 @@ function friendCardTempalte() {
 }
 
 const filterForm = document.querySelector('#filter-form');
+const filterInputs = filterForm.querySelectorAll('input');
 const resetFilterButton = filterForm.querySelector('.reset-filter');
 
 resetFilterButton.addEventListener('click', e => {
     e.preventDefault();
 
-    resetForm();
+    resetFilter();
 });
 
-function resetForm() {
-    const defaultFilterValues = ['both', 'none1', 'none2'];
-    const inputs = filterForm.querySelectorAll('input');
+filterForm.addEventListener('change', () => {
+    let filters = createFilters();
+    console.log(filters);
 
-    inputs.forEach(item => {
+    friendList = filterFriendList(filters);
+    console.log(friendList);
+});
+
+function resetFilter() {
+    const defaultFilterValues = ['both', 'none1', 'none2'];
+
+    filterInputs.forEach(item => {
         item.checked = false;
         if(defaultFilterValues.indexOf(item.id) >= 0) item.checked = true;
     });
+}
+
+function createFilters() {
+    return [...filterInputs.values()].reduce((params, item) => {
+        if(
+            item.checked &&
+            item.value !== '-1'
+        ) {
+            params.push(item.value);
+        }
+
+        return params;
+    }, []);
+}
+
+function filterFriendList(filters) {
+    friendList = defaultFriendList.slice();
+
+    if(filters.length === 1) {
+        return friendList.filter(friend => filters[0] === 'both' || friend.gender === filters[0]);
+    }
+
+    if(filters[0] === 'both' && typeof +filters[1] === 'number' && +filters[1]) {
+        console.log(1);
+            // variable next need for to keep order
+            let next = 0;
+            const gender = (!+filters[1]) ? 'female' : 'male';
+            return friendList.reduce((friends, person) => {
+                if(person.gender === gender) {
+                    friends = [...friends.slice(0, next), person, ...friends.slice(next)];
+                    next += 1;
+                }else {
+                    friends.push(person);
+                }
+                return friends;
+            }, []);
+
+    }else {
+        friendList = friendList.filter(friend => filters[0] === 'both' || friend.gender === filters[0]);
+        if(typeof +filters[1] === 'number' && +filters[1]) {
+            return (!+filters[1]) ? friendList : friendList.reverse();
+        }
+
+
+        if(filters[1] === 'age') {
+            friendList.sort((friend1, friend2) => {
+                return (!+filters[2] || !filters[2]) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
+            });
+        }
+
+        return friendList;
+
+        // friendList.reduce((friends, person) => {
+
+        // }, []);
+    }
+    //console.log(filters);
 }
