@@ -6,6 +6,10 @@ const searchClear = document.querySelector(".search-clear");
 const info = document.querySelector('.info');
 const friendsNotFoundBlock = document.querySelector('.friends-not-found');
 
+const perpage = 5;
+const pagination = document.querySelector('.pagination');
+let paginationTabs;
+
 let searchTimer;
 
 loadFriendsData();
@@ -59,7 +63,8 @@ function loadFriendsData() {
 
         friendList = defaultFriendList.slice();
 
-        createFriendCard();
+        //createFriendCard();
+        createPagination();
 
         info.innerHTML = `seed: ${SEED}; items: ${results}; female: ${female}; male: ${male}; country: ${countries.length}`;
     })
@@ -100,10 +105,45 @@ function createFriendCard() {
     }else {
         friendsNotFoundBlock.classList.add('hidden');
     }
+
+    //createPagination();
 }
 
-function paginationTemplate() {
+function createPagination() {
+    pagination.innerHTML = "";
+console.log(friendList.length);
+    let pagesCount = friendList.length / perpage;
+    let pagesCountInt = parseInt(pagesCount);
     
+    if(pagesCountInt * perpage < perpage) {
+        pagesCount = 1;
+    }
+    if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0 || pagesCount === 1)) {
+        pagesCountInt += 1;
+    }
+//alert(pagesCount);
+    const tabs = paginationTemplate(pagesCountInt);
+    pagination.appendChild(tabs);
+
+    paginationTabs = pagination.querySelectorAll('li');
+
+    //console.log(friendList);
+    friendList = filterFriendList(createFilters());
+    friendList = friendList.slice(0, perpage);
+    createFriendCard();
+}
+
+function paginationTemplate(pages) {
+    let pagesFragment = document.createDocumentFragment();
+
+    for(let i = 0; i < pages; i++) {
+        let elem = document.createElement('li');
+        if(i === 0) elem.classList.add('active');
+        elem.innerText = i + 1;
+        pagesFragment.appendChild(elem);
+    }
+
+    return pagesFragment;
 }
 
 function friendCardTempalte(friends) {
@@ -144,7 +184,8 @@ filterForm.addEventListener('change', () => {
 
         friendList = filterFriendList(filters);
 
-        createFriendCard();
+        //createFriendCard();
+        createPagination();
     }
     searchPressed = false;
 });
@@ -160,7 +201,8 @@ function resetFilter() {
     });
 
     friendList = defaultFriendList.slice();
-    createFriendCard();
+    //createFriendCard();
+    createPagination();
 }
 
 function createFilters() {
@@ -261,7 +303,8 @@ search.addEventListener("keyup", (e) => {
     searchTimer = setTimeout(() => {
         friendList = filterFriendList(createFilters());
 
-        createFriendCard();
+        //createFriendCard();
+        createPagination();
         clearInterval(searchTimer);
     }, 100);
 
@@ -281,25 +324,25 @@ function clearSearch() {
     friendList = defaultFriendList.slice();
 
     friendList = filterFriendList(createFilters());
-    createFriendCard();
+    //createFriendCard();
+    createPagination();
 }
 
-const pagination = document.querySelector('.pagination');
-const paginations = pagination.querySelectorAll('li');
-const perpage = 5;
-
 pagination.addEventListener("click", e => {
-    const page = [...paginations].indexOf(e.target);
+    const page = [...paginationTabs].indexOf(e.target);
 
-    if(!paginations[page].classList.contains('active')) {
-        paginations.forEach(item => {
+    if(!paginationTabs[page].classList.contains('active')) {
+        paginationTabs.forEach(item => {
             item.classList.remove('active');
         });
     }
 
-    paginations[page].classList.add('active');
+    paginationTabs[page].classList.add('active');
 
-    friendList = defaultFriendList.slice();
+    //friendList = defaultFriendList.slice();
+    friendList = filterFriendList(createFilters());
+    //const len = (friendList.length - perpage * page < perpage) ? friendList.length - perpage * page : perpage;
     friendList = friendList.splice(perpage * page, perpage);
+    
     createFriendCard();
 });
