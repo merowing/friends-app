@@ -9,6 +9,9 @@ const friendsNotFoundBlock = document.querySelector('.friends-not-found');
 const perpage = 5;
 const pagination = document.querySelector('.pagination');
 let paginationTabs;
+let activePage = 0;
+let activeGender = 'both';
+let countries = [];
 
 let searchTimer;
 
@@ -23,7 +26,6 @@ function loadFriendsData() {
 
     let female = 0;
     let male = 0;
-    let countries = [];
 
     fetch(url)
     .then(response => {
@@ -65,6 +67,7 @@ function loadFriendsData() {
 
         //createFriendCard();
         createPagination();
+        createCountryFilter();
 
         info.innerHTML = `seed: ${SEED}; items: ${results}; female: ${female}; male: ${male}; country: ${countries.length}`;
     })
@@ -129,7 +132,10 @@ console.log(friendList.length);
 
     //console.log(friendList);
     friendList = filterFriendList(createFilters());
-    friendList = friendList.slice(0, perpage);
+    //console.log(friendList);
+    //alert(activePage);
+    friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
+    //console.log(1, friendList);
     createFriendCard();
 }
 
@@ -138,7 +144,7 @@ function paginationTemplate(pages) {
 
     for(let i = 0; i < pages; i++) {
         let elem = document.createElement('li');
-        if(i === 0) elem.classList.add('active');
+        if(i === activePage) elem.classList.add('active');
         elem.innerText = i + 1;
         pagesFragment.appendChild(elem);
     }
@@ -156,7 +162,7 @@ function friendCardTempalte(friends) {
                             <ul>
                                 <li class="friendcard-title">${title}</li>
                                 <li class="friendcard-name">${name}</li>
-                                <li class="friendcard-from">from: ${country}</li>
+                                <li class="friendcard-from">${country}</li>
                                 <li class="friendcard-birth">${birth} (age ${age})</li>
                             </ul>
                             <div class="friendcard-id">${(id + 1)}</div>
@@ -170,6 +176,7 @@ function friendCardTempalte(friends) {
 const filterForm = document.querySelector('#filter-form');
 const filterInputs = filterForm.querySelectorAll('input');
 const resetFilterButton = filterForm.querySelector('.reset-filter');
+const countyBlock = filterForm.querySelector('select[name="country"]');
 let searchPressed = false;
 
 resetFilterButton.addEventListener('click', e => {
@@ -184,6 +191,10 @@ filterForm.addEventListener('change', () => {
 
         friendList = filterFriendList(filters);
 
+        if(activeGender !== filters[0]) {
+            activePage = 0;
+        }
+        activeGender = filters[0];
         //createFriendCard();
         createPagination();
     }
@@ -201,6 +212,10 @@ function resetFilter() {
     });
 
     friendList = defaultFriendList.slice();
+    activePage = 0;
+    activeGender = 'both';
+
+    countyBlock.selectedIndex = 0;
     //createFriendCard();
     createPagination();
 }
@@ -215,7 +230,10 @@ function createFilters() {
     }, []);
 
     const searchValue = filters.splice(0, 1);
-    return [...filters, ...searchValue];
+
+    const selectedCountry = countyBlock.value;
+
+    return [...filters, selectedCountry, ...searchValue];
 }
 
 function filterFriendList(filters) {
@@ -282,7 +300,11 @@ function filterFriendList(filters) {
 
         }
 
-        if(index === 3 && filter !== '') {
+        if(index === 3 && parseInt(filter) !== -1) {
+            friendList = friendList.filter(friend => friend.country.toLowerCase() === filter.toLowerCase());
+        }
+
+        if(index === 4 && filter !== '') {
             friendList = friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(filter) >= 0);
         }
     });
@@ -338,6 +360,7 @@ pagination.addEventListener("click", e => {
     }
 
     paginationTabs[page].classList.add('active');
+    activePage = page;
 
     //friendList = defaultFriendList.slice();
     friendList = filterFriendList(createFilters());
@@ -346,3 +369,17 @@ pagination.addEventListener("click", e => {
     
     createFriendCard();
 });
+
+function createCountryFilter() {
+    const countryOptionElement = document.createDocumentFragment();
+
+    countries.sort();
+    countries.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.innerText = item;
+        countryOptionElement.appendChild(option);
+    });
+    
+    countyBlock.appendChild(countryOptionElement);
+}
