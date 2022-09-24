@@ -3,7 +3,6 @@ let friendList = [];
 
 const search = document.querySelector(".search");
 const searchClear = document.querySelector(".search-clear");
-const info = document.querySelector('.info');
 const friendsNotFoundBlock = document.querySelector('.friends-not-found');
 
 const perpage = 5;
@@ -24,9 +23,6 @@ function loadFriendsData() {
 
     const url = `https://randomuser.me/api/?results=${results}&seed=${SEED}&exc=login,id`;
 
-    let female = 0;
-    let male = 0;
-
     fetch(url)
     .then(response => {
         if(!response.ok) return Promise.reject(response.text());
@@ -42,9 +38,6 @@ function loadFriendsData() {
             const fullname = first + ' ' + last;
             const [yearReg, monthReg, dayReg] = registeregDate.split('T')[0].split('-');
             const fullRegDate = dayReg + '.' + monthReg + '.' + yearReg;
-
-            if(gender === 'female') female += 1;
-            if(gender === 'male') male += 1;
 
             if(countries.length === 0) countries.push(country);
             if(!countries.some(c => c === country)) countries.push(country);
@@ -68,8 +61,6 @@ function loadFriendsData() {
         //createFriendCard();
         createPagination();
         createCountryFilter();
-
-        info.innerHTML = `seed: ${SEED}; items: ${results}; female: ${female}; male: ${male}; country: ${countries.length}`;
     })
     .catch(error => {
         console.log(error);
@@ -108,13 +99,11 @@ function createFriendCard() {
     }else {
         friendsNotFoundBlock.classList.add('hidden');
     }
-
-    //createPagination();
 }
 
 function createPagination() {
     pagination.innerHTML = "";
-console.log(friendList.length);
+    
     let pagesCount = friendList.length / perpage;
     let pagesCountInt = parseInt(pagesCount);
     
@@ -124,18 +113,15 @@ console.log(friendList.length);
     if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0 || pagesCount === 1)) {
         pagesCountInt += 1;
     }
-//alert(pagesCount);
+    
     const tabs = paginationTemplate(pagesCountInt);
     pagination.appendChild(tabs);
 
     paginationTabs = pagination.querySelectorAll('li');
 
-    //console.log(friendList);
     friendList = filterFriendList(createFilters());
-    //console.log(friendList);
-    //alert(activePage);
     friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
-    //console.log(1, friendList);
+    
     createFriendCard();
 }
 
@@ -195,7 +181,7 @@ filterForm.addEventListener('change', () => {
             activePage = 0;
         }
         activeGender = filters[0];
-        //createFriendCard();
+
         createPagination();
     }
     searchPressed = false;
@@ -216,7 +202,6 @@ function resetFilter() {
     activeGender = 'both';
 
     countyBlock.selectedIndex = 0;
-    //createFriendCard();
     createPagination();
 }
 
@@ -243,7 +228,8 @@ function filterFriendList(filters) {
      * 0 - gender
      * 1 - type
      * 2 - asc, desc
-     * 3 - search value
+     * 3 - country
+     * 4 - search value
     */
 
     filters.forEach((filter, index) => {
@@ -325,7 +311,6 @@ search.addEventListener("keyup", (e) => {
     searchTimer = setTimeout(() => {
         friendList = filterFriendList(createFilters());
 
-        //createFriendCard();
         createPagination();
         clearInterval(searchTimer);
     }, 100);
@@ -341,12 +326,10 @@ function clearSearch() {
     search.value = "";
     searchClear.classList.remove("visible");
     searchPressed = false;
-
-    //filterForm.dispatchEvent(new Event('change'));
+;
     friendList = defaultFriendList.slice();
 
     friendList = filterFriendList(createFilters());
-    //createFriendCard();
     createPagination();
 }
 
@@ -362,9 +345,7 @@ pagination.addEventListener("click", e => {
     paginationTabs[page].classList.add('active');
     activePage = page;
 
-    //friendList = defaultFriendList.slice();
     friendList = filterFriendList(createFilters());
-    //const len = (friendList.length - perpage * page < perpage) ? friendList.length - perpage * page : perpage;
     friendList = friendList.splice(perpage * page, perpage);
     
     createFriendCard();

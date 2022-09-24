@@ -289,13 +289,6 @@ fieldset label[for="desc"]::before {
     width: 21px;
 }
 
-.info {
-    position: absolute;
-    color: lightgray;
-    top: 8px;
-    font-size: 12px;
-    font-family: Consolas;
-}
 .pagination {
     margin-bottom: 16px;
 }
