@@ -215,11 +215,13 @@ fieldset label[for="desc"]::before {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 10px;
 }
-.friendlist > ul.empty {
-    grid-template-columns: 1fr;
+.friendlist ul.friends-not-found {
     height: 100px;
     align-items: center;
     text-align: center;
+}
+.friendlist ul.friends-not-found.hidden {
+    display: none;
 }
 .friendlist > ul > li {
     width: 244px;

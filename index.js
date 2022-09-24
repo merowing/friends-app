@@ -4,6 +4,7 @@ let friendList = [];
 const search = document.querySelector(".search");
 const searchClear = document.querySelector(".search-clear");
 const info = document.querySelector('.info');
+const friendsNotFoundBlock = document.querySelector('.friends-not-found');
 
 let searchTimer;
 
@@ -94,18 +95,11 @@ function createFriendCard() {
     friendListBlock.appendChild(fragmentFriendslist);
 
     if(!friendList.length) {
-        friendListBlock.classList.add('empty');
+        friendsNotFoundBlock.classList.remove('hidden');
         friendListBlock.innerHTML = "";
-        friendListBlock.appendChild(emptyFriendList());
     }else {
-        friendListBlock.classList.remove('empty');
+        friendsNotFoundBlock.classList.add('hidden');
     }
-}
-
-function emptyFriendList() {
-    const div = document.createElement('div');
-    div.innerText = 'Friends not found!';
-    return div;
 }
 
 function paginationTemplate() {
@@ -136,6 +130,7 @@ function friendCardTempalte(friends) {
 const filterForm = document.querySelector('#filter-form');
 const filterInputs = filterForm.querySelectorAll('input');
 const resetFilterButton = filterForm.querySelector('.reset-filter');
+let searchPressed = false;
 
 resetFilterButton.addEventListener('click', e => {
     e.preventDefault();
@@ -144,15 +139,14 @@ resetFilterButton.addEventListener('click', e => {
 });
 
 filterForm.addEventListener('change', () => {
-    let filters = createFilters();
+    if(!searchPressed) {
+        let filters = createFilters();
 
-    friendList = filterFriendList(filters);
+        friendList = filterFriendList(filters);
 
-    if(search.value) {
-        friendList = searchFriend(search.value.toLowerCase());
+        createFriendCard();
     }
-
-    createFriendCard();
+    searchPressed = false;
 });
 
 function resetFilter() {
@@ -170,79 +164,94 @@ function resetFilter() {
 }
 
 function createFilters() {
-    return [...filterInputs.values()].reduce((params, item) => {
-        if(
-            item.checked &&
-            item.value !== '-1'
-        ) {
+    const filters = [...filterInputs.values()].reduce((params, item) => {
+        if(item.checked || item.type === 'text') {
             params.push(item.value);
         }
 
         return params;
     }, []);
+
+    const searchValue = filters.splice(0, 1);
+    return [...filters, ...searchValue];
 }
 
 function filterFriendList(filters) {
     friendList = defaultFriendList.slice();
 
-    if(filters.length === 1) {
-        return friendList.filter(friend => filters[0] === 'both' || friend.gender === filters[0]);
-    }
+    /*
+     * 0 - gender
+     * 1 - type
+     * 2 - asc, desc
+     * 3 - search value
+    */
 
-    if(filters[0] === 'both' && filters.length === 2 && !isNaN(+filters[1])) {
-        console.log(1);
-            // variable next need for to keep order
-            let next = 0;
-            const gender = (!+filters[1]) ? 'female' : 'male';
-            return friendList.reduce((friends, person) => {
-                if(person.gender === gender) {
-                    friends = [...friends.slice(0, next), person, ...friends.slice(next)];
-                    next += 1;
-                }else {
-                    friends.push(person);
-                }
-                return friends;
-            }, []);
-
-    }else {
-        friendList = friendList.filter(friend => filters[0] === 'both' || friend.gender === filters[0]);
-        if(typeof +filters[1] === 'number' && +filters[1]) {
-            return (!+filters[1]) ? friendList : friendList.reverse();
-        }
-        if(!filters[2]) return friendList;
-
-        if(filters[1] === 'age') {
-            friendList.sort((friend1, friend2) => {
-                return (!+filters[2]) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
-            });
+    filters.forEach((filter, index) => {
+        if(index === 0) {
+            friendList = friendList.filter(friend => filter === 'both' || friend.gender === filter);
         }
 
-        if(filters[1] === 'name') {
-            friendList.sort((friend1, friend2) => {
+        if(index === 1 && !isNaN(+filters[2]) && +filters[1] !== -1 && +filters[2] !== -1) {
+            if(filter === 'age') {
+                friendList.sort((friend1, friend2) => {
+                    return (!+filters[2]) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
+                });
+            }
 
-                let name1 = friend1.name.fullname;
-                let name2 = friend2.name.fullname;
-
-                let n = 0;
-                while(name1.slice(0, n) === name2.slice(0, n)) {
-                    n += 1;
-                }
-
-                name1 = name1.slice(0, n);
-                name2 = name2.slice(0, n);
-
-                const condition = (!+filters[2]) ? name1 > name2 : name2 > name1;
-
-                return condition ? 1 : -1;            
-            });
+            if(filter === 'name') {
+                friendList.sort((friend1, friend2) => {
+    
+                    let name1 = friend1.name.fullname;
+                    let name2 = friend2.name.fullname;
+    
+                    let n = 0;
+                    while(name1.slice(0, n) === name2.slice(0, n)) {
+                        n += 1;
+                    }
+    
+                    name1 = name1.slice(0, n);
+                    name2 = name2.slice(0, n);
+    
+                    const condition = (!+filters[2]) ? name1 > name2 : name2 > name1;
+    
+                    return condition ? 1 : -1;            
+                });
+            }
         }
 
-        return friendList;
-    }
+        if(index === 2 && !isNaN(+filters[2]) && +filters[1] === -1 && +filters[2] !== -1) {
+            
+            if(filters[0] === 'both') {
+                // variable next need for to keep order
+                let next = 0;
+                const gender = (!+filters[2]) ? 'female' : 'male';
+                friendList = friendList.reduce((friends, person) => {
+                    if(person.gender === gender) {
+                        friends = [...friends.slice(0, next), person, ...friends.slice(next)];
+                        next += 1;
+                    }else {
+                        friends.push(person);
+                    }
+                    return friends;
+                }, []);
+            }else {
+                friendList = (+filters[2] && +filters[2] !== -1) ? friendList.reverse() : friendList;
+            }
+
+        }
+
+        if(index === 3 && filter !== '') {
+            friendList = friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(filter) >= 0);
+        }
+    });
+
+    return friendList;
 }
 
-search.addEventListener("keyup", () => {
+search.addEventListener("keyup", (e) => {
     clearInterval(searchTimer);
+    searchPressed = true;
+
     if(search.value !== "") {
         searchClear.classList.add('visible');
     }else {
@@ -251,11 +260,11 @@ search.addEventListener("keyup", () => {
 
     searchTimer = setTimeout(() => {
         friendList = filterFriendList(createFilters());
-        friendList = searchFriend(search.value.toLowerCase());
 
         createFriendCard();
         clearInterval(searchTimer);
     }, 100);
+
 });
 
 searchClear.addEventListener("click", () => {
@@ -266,16 +275,13 @@ function clearSearch() {
     clearInterval(searchTimer);
     search.value = "";
     searchClear.classList.remove("visible");
+    searchPressed = false;
 
     //filterForm.dispatchEvent(new Event('change'));
     friendList = defaultFriendList.slice();
 
     friendList = filterFriendList(createFilters());
     createFriendCard();
-}
-
-function searchFriend(str = '') {
-    return friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(str) >= 0);
 }
 
 const pagination = document.querySelector('.pagination');
