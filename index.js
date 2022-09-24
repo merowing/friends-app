@@ -58,7 +58,6 @@ function loadFriendsData() {
 
         friendList = defaultFriendList.slice();
 
-        //createFriendCard();
         createPagination();
         createCountryFilter();
     })
@@ -69,7 +68,6 @@ function loadFriendsData() {
 }
 
 function createFriendCard() {
-    console.log(JSON.stringify(friendList));
     const friendListBlock = document.querySelector('.friendlist > ul');
     friendListBlock.innerHTML = "";
 
