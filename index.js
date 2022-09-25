@@ -119,6 +119,7 @@ function createPagination() {
 
     paginationTabs = pagination.querySelectorAll('li');
 
+    console.log(createFilters());
     friendList = filterFriendList(createFilters());
     friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
     
