@@ -110,9 +110,10 @@ function createPagination() {
     if(pagesCountInt * perpage < perpage) {
         pagesCount = 1;
     }
-    if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0 || pagesCount === 1)) {
+    if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0)) {
         pagesCountInt += 1;
     }
+    pagesCountInt = pagesCountInt || 1;
     
     const tabs = paginationTemplate(pagesCountInt);
     pagination.appendChild(tabs);
@@ -163,7 +164,7 @@ function friendCardTempalte(friends) {
 const filterForm = document.querySelector('#filter-form');
 const filterInputs = filterForm.querySelectorAll('input');
 const resetFilterButton = filterForm.querySelector('.reset-filter');
-const countyBlock = filterForm.querySelector('select[name="country"]');
+const countryBlock = filterForm.querySelector('select[name="country"]');
 let searchPressed = false;
 
 resetFilterButton.addEventListener('click', e => {
@@ -202,7 +203,7 @@ function resetFilter() {
     activePage = 0;
     activeGender = 'both';
 
-    countyBlock.selectedIndex = 0;
+    countryBlock.selectedIndex = 0;
     createPagination();
 }
 
@@ -217,7 +218,10 @@ function createFilters() {
 
     const searchValue = filters.splice(0, 1);
 
-    const selectedCountry = countyBlock.value;
+    const selectedCountry = [...countryBlock.querySelectorAll('option')].reduce((countries, option) => {
+        if(option.selected) countries.push(option.value);
+        return countries;
+    }, []);
 
     return [...filters, selectedCountry, ...searchValue];
 }
@@ -287,8 +291,11 @@ function filterFriendList(filters) {
 
         }
 
-        if(index === 3 && parseInt(filter) !== -1) {
-            friendList = friendList.filter(friend => friend.country.toLowerCase() === filter.toLowerCase());
+        if(index === 3 && filter.indexOf('-1') === -1) {
+            console.log(1, friendList);
+            filter = filter.map(country => country.toLowerCase());
+            friendList = friendList.filter(friend => filter.indexOf(friend.country.toLowerCase()) !== -1);
+            console.log(friendList);
         }
 
         if(index === 4 && filter !== '') {
@@ -363,5 +370,38 @@ function createCountryFilter() {
         countryOptionElement.appendChild(option);
     });
     
-    countyBlock.appendChild(countryOptionElement);
+    countryBlock.appendChild(countryOptionElement);
 }
+
+let countryBlockOptionsChecked = [];
+countryBlock.addEventListener("mousedown", e => {
+    e.preventDefault();
+    const options = countryBlock.querySelectorAll('option');
+    const index = [...options].indexOf(e.target);
+
+    if(!index) {
+        [...options].forEach(elem => {
+            elem.selected = false;
+        });
+    }else {
+        if(options[0].selected) options[0].selected = false;
+        
+        e.target.selected = !e.target.selected;
+        // if(!e.target.selected)
+        //     e.target.setAttribute('selected', '');
+        // else
+        //     e.target.removeAttribute('selected');
+    }
+
+    if([...options].every(option => !option.selected)) {
+        options[0].selected = true;
+    }
+    
+    let scrollTop = countryBlock.scrollTop;
+    setTimeout(() => countryBlock.scrollTo(0, scrollTop), 0);
+
+    //activePage = 0;
+    console.log(createFilters());
+    friendList = filterFriendList(createFilters());
+    createPagination();
+});

@@ -324,6 +324,7 @@ fieldset label[for="desc"]::before {
     font: normal 14px Arial;
     border: 1px solid lightcoral;
     border-right: 0;
+    position: relative;
 }
 .filter-country > option {
     color: #000;
