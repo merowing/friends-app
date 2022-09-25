@@ -397,11 +397,27 @@ countryBlock.addEventListener("mousedown", e => {
         options[0].selected = true;
     }
     
-    let scrollTop = countryBlock.scrollTop;
+    scrollTop = countryBlock.scrollTop;
     setTimeout(() => countryBlock.scrollTo(0, scrollTop), 0);
 
     //activePage = 0;
-    console.log(createFilters());
-    friendList = filterFriendList(createFilters());
-    createPagination();
+    //console.log(createFilters());
+    // friendList = filterFriendList(createFilters());
+
+    // if(parseInt(friendList.length / perpage) <= activePage) {
+    //     activePage = 0;
+    // }
+    
+    // createPagination();
+});
+countryBlock.addEventListener("click", e => {
+    if(e.target.tagName === 'OPTION') {
+        friendList = filterFriendList(createFilters());
+
+        if(parseInt(friendList.length / perpage) < activePage && friendList.length / perpage % 1 === 0) {
+            activePage = 0;
+        }
+        
+        createPagination();
+    }
 });
