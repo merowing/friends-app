@@ -4,13 +4,15 @@ let friendList = [];
 const search = document.querySelector(".search");
 const searchClear = document.querySelector(".search-clear");
 const friendsNotFoundBlock = document.querySelector('.friends-not-found');
+const selectAgeRanges = document.querySelectorAll('.filter-ages > select');
 
 const perpage = 5;
-const pagination = document.querySelector('.pagination');
+const pagination = document.querySelector('.pagination > ul');
 let paginationTabs;
 let activePage = 0;
 let activeGender = 'both';
 let countries = [];
+let ages = [];
 
 let searchTimer;
 
@@ -42,6 +44,8 @@ function loadFriendsData() {
             if(countries.length === 0) countries.push(country);
             if(!countries.some(c => c === country)) countries.push(country);
 
+            ages.push(age);
+
             allValues.push({
                 id,
                 gender,
@@ -58,6 +62,8 @@ function loadFriendsData() {
 
         friendList = defaultFriendList.slice();
 
+        //createFriendCard();
+        createAgeRange();
         createPagination();
         createCountryFilter();
     })
@@ -101,6 +107,9 @@ function createFriendCard() {
 
 function createPagination() {
     pagination.innerHTML = "";
+
+    let filters = createFilters();
+    friendList = filterFriendList(filters);
     
     let pagesCount = friendList.length / perpage;
     let pagesCountInt = parseInt(pagesCount);
@@ -108,18 +117,28 @@ function createPagination() {
     if(pagesCountInt * perpage < perpage) {
         pagesCount = 1;
     }
-    if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0 || pagesCount === 1)) {
+    if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0)) {
         pagesCountInt += 1;
     }
+    pagesCountInt = pagesCountInt || 1;
     
+    if(pagesCount <= activePage) {
+        activePage = 0;
+    }
+
     const tabs = paginationTemplate(pagesCountInt);
     pagination.appendChild(tabs);
 
     paginationTabs = pagination.querySelectorAll('li');
 
-    friendList = filterFriendList(createFilters());
+    console.log(createFilters());
     friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
     
+    if(activeGender !== filters[0]) {
+        activePage = 0;
+    }
+    activeGender = filters[0];
+
     createFriendCard();
 }
 
@@ -160,7 +179,7 @@ function friendCardTempalte(friends) {
 const filterForm = document.querySelector('#filter-form');
 const filterInputs = filterForm.querySelectorAll('input');
 const resetFilterButton = filterForm.querySelector('.reset-filter');
-const countyBlock = filterForm.querySelector('select[name="country"]');
+const countryBlock = filterForm.querySelector('select[name="country"]');
 let searchPressed = false;
 
 resetFilterButton.addEventListener('click', e => {
@@ -171,14 +190,14 @@ resetFilterButton.addEventListener('click', e => {
 
 filterForm.addEventListener('change', () => {
     if(!searchPressed) {
-        let filters = createFilters();
+        //let filters = createFilters();
 
-        friendList = filterFriendList(filters);
+        //friendList = filterFriendList(filters);
 
-        if(activeGender !== filters[0]) {
-            activePage = 0;
-        }
-        activeGender = filters[0];
+        // if(activeGender !== filters[0]) {
+        //     activePage = 0;
+        // }
+        // activeGender = filters[0];
 
         createPagination();
     }
@@ -199,7 +218,8 @@ function resetFilter() {
     activePage = 0;
     activeGender = 'both';
 
-    countyBlock.selectedIndex = 0;
+    countryBlock.selectedIndex = 0;
+    selectAgeRanges.forEach(select => select.selectedIndex = 0);
     createPagination();
 }
 
@@ -214,9 +234,16 @@ function createFilters() {
 
     const searchValue = filters.splice(0, 1);
 
-    const selectedCountry = countyBlock.value;
+    const selectedCountry = [...countryBlock.querySelectorAll('option')].reduce((countries, option) => {
+        if(option.selected) countries.push(option.value);
+        return countries;
+    }, []);
 
-    return [...filters, selectedCountry, ...searchValue];
+    const ageRange = [...selectAgeRanges].map(age => {
+        return age.options[age.selectedIndex].text;
+    });
+
+    return [...filters, selectedCountry, ageRange, ...searchValue];
 }
 
 function filterFriendList(filters) {
@@ -284,11 +311,20 @@ function filterFriendList(filters) {
 
         }
 
-        if(index === 3 && parseInt(filter) !== -1) {
-            friendList = friendList.filter(friend => friend.country.toLowerCase() === filter.toLowerCase());
+        if(index === 3 && filter.indexOf('-1') === -1) {
+            console.log(1, friendList);
+            filter = filter.map(country => country.toLowerCase());
+            friendList = friendList.filter(friend => filter.indexOf(friend.country.toLowerCase()) !== -1);
+            console.log(friendList);
         }
 
-        if(index === 4 && filter !== '') {
+        if(index === 4) {
+            if(+filter[0] > +filter[1]) filter.reverse();
+
+            friendList = friendList.filter(friend => friend.dob.age >= +filter[0] && friend.dob.age <= +filter[1]);
+        }
+
+        if(index === 5 && filter !== '') {
             friendList = friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(filter) >= 0);
         }
     });
@@ -308,6 +344,10 @@ search.addEventListener("keyup", (e) => {
 
     searchTimer = setTimeout(() => {
         friendList = filterFriendList(createFilters());
+
+        if(friendList.length / perpage <= activePage) {
+            activePage = 0;
+        }
 
         createPagination();
         clearInterval(searchTimer);
@@ -360,5 +400,75 @@ function createCountryFilter() {
         countryOptionElement.appendChild(option);
     });
     
-    countyBlock.appendChild(countryOptionElement);
+    countryBlock.appendChild(countryOptionElement);
+}
+
+let countryBlockOptionsChecked = [];
+countryBlock.addEventListener("mousedown", e => {
+    e.preventDefault();
+    const options = countryBlock.querySelectorAll('option');
+    const index = [...options].indexOf(e.target);
+
+    if(!index) {
+        [...options].forEach(elem => {
+            elem.selected = false;
+        });
+    }else {
+        if(options[0].selected) options[0].selected = false;
+        
+        e.target.selected = !e.target.selected;
+        // if(!e.target.selected)
+        //     e.target.setAttribute('selected', '');
+        // else
+        //     e.target.removeAttribute('selected');
+    }
+
+    if([...options].every(option => !option.selected)) {
+        options[0].selected = true;
+    }
+    
+    scrollTop = countryBlock.scrollTop;
+    setTimeout(() => countryBlock.scrollTo(0, scrollTop), 0);
+
+    //activePage = 0;
+    //console.log(createFilters());
+    // friendList = filterFriendList(createFilters());
+
+    // if(parseInt(friendList.length / perpage) <= activePage) {
+    //     activePage = 0;
+    // }
+    
+    // createPagination();
+});
+countryBlock.addEventListener("click", e => {
+    if(e.target.tagName === 'OPTION') {
+        // friendList = filterFriendList(createFilters());
+
+        // if(friendList.length / perpage <= activePage) {
+        //     activePage = 0;
+        // }
+        
+        createPagination();
+    }
+});
+
+function createAgeRange() {
+    ages = ages.filter((age, ind) => ages.indexOf(age) === ind);
+    ages.sort();
+
+    const optionsFragment = reverse => {
+        let agesTemp = ages.slice();
+        if(reverse) agesTemp.reverse();
+
+        return agesTemp.reduce((options, age) => {
+            const option = document.createElement('option');
+            option.value = age;
+            option.text = age;
+
+            options.appendChild(option);
+            return options;
+        }, document.createDocumentFragment());
+    };
+
+    selectAgeRanges.forEach((select, ind) => select.appendChild(optionsFragment(!!ind)));
 }
