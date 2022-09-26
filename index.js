@@ -319,6 +319,10 @@ search.addEventListener("keyup", (e) => {
     searchTimer = setTimeout(() => {
         friendList = filterFriendList(createFilters());
 
+        if(friendList.length / perpage <= activePage) {
+            activePage = 0;
+        }
+
         createPagination();
         clearInterval(searchTimer);
     }, 100);
