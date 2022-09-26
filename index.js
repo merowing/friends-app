@@ -414,7 +414,7 @@ countryBlock.addEventListener("click", e => {
     if(e.target.tagName === 'OPTION') {
         friendList = filterFriendList(createFilters());
 
-        if(parseInt(friendList.length / perpage) < activePage && friendList.length / perpage % 1 === 0) {
+        if(friendList.length / perpage <= activePage) {
             activePage = 0;
         }
         
