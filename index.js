@@ -6,7 +6,7 @@ const searchClear = document.querySelector(".search-clear");
 const friendsNotFoundBlock = document.querySelector('.friends-not-found');
 const selectAgeRanges = document.querySelectorAll('.filter-ages > select');
 
-const perpage = 5;
+const perpage = 8;
 const pagination = document.querySelector('.pagination > ul');
 let paginationTabs;
 let activePage = 0;
@@ -20,7 +20,7 @@ loadFriendsData();
 
 function loadFriendsData() {
     const SEED = 'abc';
-    const results = 20;
+    const results = 100;
     const listOfMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const url = `https://randomuser.me/api/?results=${results}&seed=${SEED}&exc=login,id`;
@@ -106,9 +106,11 @@ function createFriendCard() {
     }
 }
 
-function createPagination() {alert();
+function createPagination() {
     pagination.innerHTML = "";
-    friendList = filterFriendList(createFilters());
+
+    let filters = createFilters();
+    friendList = filterFriendList(filters);
     
     let pagesCount = friendList.length / perpage;
     let pagesCountInt = parseInt(pagesCount);
@@ -133,6 +135,11 @@ function createPagination() {alert();
     console.log(createFilters());
     friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
     
+    if(activeGender !== filters[0]) {
+        activePage = 0;
+    }
+    activeGender = filters[0];
+
     createFriendCard();
 }
 
@@ -184,14 +191,14 @@ resetFilterButton.addEventListener('click', e => {
 
 filterForm.addEventListener('change', () => {
     if(!searchPressed) {
-        let filters = createFilters();
+        //let filters = createFilters();
 
-        friendList = filterFriendList(filters);
+        //friendList = filterFriendList(filters);
 
-        if(activeGender !== filters[0]) {
-            activePage = 0;
-        }
-        activeGender = filters[0];
+        // if(activeGender !== filters[0]) {
+        //     activePage = 0;
+        // }
+        // activeGender = filters[0];
 
         createPagination();
     }
@@ -313,6 +320,8 @@ function filterFriendList(filters) {
         }
 
         if(index === 4) {
+            if(+filter[0] > +filter[1]) filter.reverse();
+
             friendList = friendList.filter(friend => friend.dob.age >= +filter[0] && friend.dob.age <= +filter[1]);
         }
 
