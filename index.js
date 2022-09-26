@@ -4,13 +4,15 @@ let friendList = [];
 const search = document.querySelector(".search");
 const searchClear = document.querySelector(".search-clear");
 const friendsNotFoundBlock = document.querySelector('.friends-not-found');
+const selectAgeRanges = document.querySelectorAll('.filter-ages > select');
 
 const perpage = 5;
-const pagination = document.querySelector('.pagination');
+const pagination = document.querySelector('.pagination > ul');
 let paginationTabs;
 let activePage = 0;
 let activeGender = 'both';
 let countries = [];
+let ages = [];
 
 let searchTimer;
 
@@ -42,6 +44,8 @@ function loadFriendsData() {
             if(countries.length === 0) countries.push(country);
             if(!countries.some(c => c === country)) countries.push(country);
 
+            ages.push(age);
+
             allValues.push({
                 id,
                 gender,
@@ -59,6 +63,7 @@ function loadFriendsData() {
         friendList = defaultFriendList.slice();
 
         //createFriendCard();
+        createAgeRange();
         createPagination();
         createCountryFilter();
     })
@@ -101,8 +106,9 @@ function createFriendCard() {
     }
 }
 
-function createPagination() {
+function createPagination() {alert();
     pagination.innerHTML = "";
+    friendList = filterFriendList(createFilters());
     
     let pagesCount = friendList.length / perpage;
     let pagesCountInt = parseInt(pagesCount);
@@ -115,13 +121,16 @@ function createPagination() {
     }
     pagesCountInt = pagesCountInt || 1;
     
+    if(pagesCount <= activePage) {
+        activePage = 0;
+    }
+
     const tabs = paginationTemplate(pagesCountInt);
     pagination.appendChild(tabs);
 
     paginationTabs = pagination.querySelectorAll('li');
 
     console.log(createFilters());
-    friendList = filterFriendList(createFilters());
     friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
     
     createFriendCard();
@@ -204,6 +213,7 @@ function resetFilter() {
     activeGender = 'both';
 
     countryBlock.selectedIndex = 0;
+    selectAgeRanges.forEach(select => select.selectedIndex = 0);
     createPagination();
 }
 
@@ -223,7 +233,11 @@ function createFilters() {
         return countries;
     }, []);
 
-    return [...filters, selectedCountry, ...searchValue];
+    const ageRange = [...selectAgeRanges].map(age => {
+        return age.options[age.selectedIndex].text;
+    });
+
+    return [...filters, selectedCountry, ageRange, ...searchValue];
 }
 
 function filterFriendList(filters) {
@@ -298,7 +312,11 @@ function filterFriendList(filters) {
             console.log(friendList);
         }
 
-        if(index === 4 && filter !== '') {
+        if(index === 4) {
+            friendList = friendList.filter(friend => friend.dob.age >= +filter[0] && friend.dob.age <= +filter[1]);
+        }
+
+        if(index === 5 && filter !== '') {
             friendList = friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(filter) >= 0);
         }
     });
@@ -416,12 +434,33 @@ countryBlock.addEventListener("mousedown", e => {
 });
 countryBlock.addEventListener("click", e => {
     if(e.target.tagName === 'OPTION') {
-        friendList = filterFriendList(createFilters());
+        // friendList = filterFriendList(createFilters());
 
-        if(friendList.length / perpage <= activePage) {
-            activePage = 0;
-        }
+        // if(friendList.length / perpage <= activePage) {
+        //     activePage = 0;
+        // }
         
         createPagination();
     }
 });
+
+function createAgeRange() {
+    ages = ages.filter((age, ind) => ages.indexOf(age) === ind);
+    ages.sort();
+
+    const optionsFragment = reverse => {
+        let agesTemp = ages.slice();
+        if(reverse) agesTemp.reverse();
+
+        return agesTemp.reduce((options, age) => {
+            const option = document.createElement('option');
+            option.value = age;
+            option.text = age;
+
+            options.appendChild(option);
+            return options;
+        }, document.createDocumentFragment());
+    };
+
+    selectAgeRanges.forEach((select, ind) => select.appendChild(optionsFragment(!!ind)));
+}

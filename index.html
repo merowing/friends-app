@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Friends application</title>
     <meta charset="utf-8">
+    <title>Friends application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -18,7 +19,7 @@
                 <div class="filter-top">
                     <ul>
                         <li>Filter</li>
-                        <li><button class="reset-filter">Reset all</button></li>
+                        <li><button class="reset-filter" type="button">Reset all</button></li>
                     </ul>
                 </div>
                 <div class="filter-search">
@@ -28,90 +29,69 @@
                 <ul>
                     <li>
                         <div class="filter-title">Select a gender</div>
-                        <div>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <fieldset id="gender">
-                                            <div>
-                                                <input type="radio" id="both" name="gender" value="both" checked>
-                                                <label for="both">Both</label>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="male" name="gender" value="male">
-                                                <label for="male">Male</label>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="female" name="gender" value="female">
-                                                <label for="female">Female</label>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <fieldset id="gender">
+                            <div>
+                                <input type="radio" id="both" name="gender" value="both" checked>
+                                <label for="both">Both</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="male" name="gender" value="male">
+                                <label for="male">Male</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="female" name="gender" value="female">
+                                <label for="female">Female</label>
+                            </div>
+                        </fieldset>
                     </li>
                     <li>
                         <div class="filter-title">Sort by</div>
-                        <div>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <fieldset id="sort">
-                                            <div>
-                                                <input type="radio" id="age" name="sort" value="age">
-                                                <label for="age">Age</label>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="name" name="sort" value="name">
-                                                <label for="name">Name</label>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="none1" name="sort" value="-1" checked>
-                                                <label for="none1">None</label>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <fieldset id="sort">
+                            <div>
+                                <input type="radio" id="age" name="sort" value="age">
+                                <label for="age">Age</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="name" name="sort" value="name">
+                                <label for="name">Name</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="none1" name="sort" value="-1" checked>
+                                <label for="none1">None</label>
+                            </div>
+                        </fieldset>
                     </li>
                     <li>
-                        <div>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <fieldset id="updown">
-                                            <div>
-                                                <input type="radio" id="asc" name="updown" value="0">
-                                                <label for="asc">Asc</label>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="desc" name="updown" value="1">
-                                                <label for="desc">Desc</label>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="none2" name="updown" value="-1" checked>
-                                                <label for="none2">None</label>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </li>
-                            </ul>
+                        <fieldset id="updown">
+                            <div>
+                                <input type="radio" id="asc" name="updown" value="0">
+                                <label for="asc">Asc</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="desc" name="updown" value="1">
+                                <label for="desc">Desc</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="none2" name="updown" value="-1" checked>
+                                <label for="none2">None</label>
+                            </div>
+                        </fieldset>
+                    </li>
+                    <li>
+                        <div class="filter-title">Select an age</div>
+                        <div class="filter-ages">
+                            <select name="age-min" aria-label="age-min">
+                            </select>
+                            <select name="age-max" aria-label="age-min">
+                            </select>
                         </div>
                     </li>
                     <li>
                         <div class="filter-title">Select countries</div>
                         <div>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <select name="country" class="filter-country" multiple>
-                                            <option value="-1" selected>Select all</option>
-                                        </select>
-                                    </div>
-                                </li>
-                            </ul>
+                            <select name="country" class="filter-country" aria-label="countries" multiple>
+                                <option value="-1" selected>Select all</option>
+                            </select>
                         </div>
                     </li>
                 </ul>
@@ -119,10 +99,7 @@
             </div>
             <div class="friendlist">
                 <div class="pagination">
-                    <ul>
-                        <li class="active">1</li>
-                        <li>2</li>
-                    </ul>
+                    <ul></ul>
                 </div>
                 <ul></ul>
                 <ul class="friends-not-found hidden">

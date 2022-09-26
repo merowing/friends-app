@@ -37,8 +37,9 @@ footer span {
     z-index: 1;
     box-sizing: border-box;
     padding: 0 10px;
-    user-select: none;
     overflow: auto;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .friendlist {
@@ -308,6 +309,7 @@ fieldset label[for="desc"]::before {
     margin-right: 8px;
     border: 1px solid lightcoral;
     color: lightcoral;
+    -webkit-user-select: none;
     user-select: none;
 }
 .pagination li.active,
@@ -344,4 +346,24 @@ fieldset label[for="desc"]::before {
     background-color: #b36161;
     border-radius: 8px;
     border: 2px solid lightcoral;
+}
+
+.filter-ages {
+    display: flex;
+    justify-content: space-between;
+}
+.filter-ages > select {
+    font-size: 16px;
+    padding: 7px 0;
+    border-radius: 10px;
+    width: 100px;
+    outline: none;
+    color: #fff;
+    background-color: #b36161;
+    border: 0;
+    text-align: center;
+}
+.filter-ages > select option {
+    background-color: white;
+    color: black;
 }
