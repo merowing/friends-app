@@ -62,7 +62,6 @@ function loadFriendsData() {
 
         friendList = defaultFriendList.slice();
 
-        //createFriendCard();
         createAgeRange();
         createPagination();
         createCountryFilter();
@@ -131,7 +130,6 @@ function createPagination() {
 
     paginationTabs = pagination.querySelectorAll('li');
 
-    console.log(createFilters());
     friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
     
     if(activeGender !== filters[0]) {
@@ -190,15 +188,6 @@ resetFilterButton.addEventListener('click', e => {
 
 filterForm.addEventListener('change', () => {
     if(!searchPressed) {
-        //let filters = createFilters();
-
-        //friendList = filterFriendList(filters);
-
-        // if(activeGender !== filters[0]) {
-        //     activePage = 0;
-        // }
-        // activeGender = filters[0];
-
         createPagination();
     }
     searchPressed = false;
@@ -253,8 +242,9 @@ function filterFriendList(filters) {
      * 0 - gender
      * 1 - type
      * 2 - asc, desc
-     * 3 - country
-     * 4 - search value
+     * 3 - country range
+     * 4 - age range
+     * 5 - search value
     */
 
     filters.forEach((filter, index) => {
@@ -312,10 +302,8 @@ function filterFriendList(filters) {
         }
 
         if(index === 3 && filter.indexOf('-1') === -1) {
-            console.log(1, friendList);
             filter = filter.map(country => country.toLowerCase());
             friendList = friendList.filter(friend => filter.indexOf(friend.country.toLowerCase()) !== -1);
-            console.log(friendList);
         }
 
         if(index === 4) {
@@ -417,10 +405,6 @@ countryBlock.addEventListener("mousedown", e => {
         if(options[0].selected) options[0].selected = false;
         
         e.target.selected = !e.target.selected;
-        // if(!e.target.selected)
-        //     e.target.setAttribute('selected', '');
-        // else
-        //     e.target.removeAttribute('selected');
     }
 
     if([...options].every(option => !option.selected)) {
@@ -429,25 +413,9 @@ countryBlock.addEventListener("mousedown", e => {
     
     scrollTop = countryBlock.scrollTop;
     setTimeout(() => countryBlock.scrollTo(0, scrollTop), 0);
-
-    //activePage = 0;
-    //console.log(createFilters());
-    // friendList = filterFriendList(createFilters());
-
-    // if(parseInt(friendList.length / perpage) <= activePage) {
-    //     activePage = 0;
-    // }
-    
-    // createPagination();
 });
 countryBlock.addEventListener("click", e => {
     if(e.target.tagName === 'OPTION') {
-        // friendList = filterFriendList(createFilters());
-
-        // if(friendList.length / perpage <= activePage) {
-        //     activePage = 0;
-        // }
-        
         createPagination();
     }
 });
