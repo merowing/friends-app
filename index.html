@@ -10,6 +10,12 @@
     <main>
         <div id="wrap">
             <div class="filter">
+                <div class="mobile-close">
+                    <div>
+                        <div class="left"></div>
+                        <div class="right"></div>
+                    </div>
+                </div>
                 <div class="logo">
                     <span>Friends</span>
                     <span class="logo-app">app</span>
@@ -90,12 +96,15 @@
                         <div class="filter-title">Select countries</div>
                         <div>
                             <select name="country" class="filter-country" aria-label="countries" multiple>
-                                <option value="-1" selected>Select all</option>
+                                <!-- <option value="-1" selected>Select all</option> -->
                             </select>
                         </div>
                     </li>
                 </ul>
                 </form>
+                <!-- <div>
+                    <button class="mobile-apply">Apply</button>
+                </div> -->
             </div>
             <div class="friendlist">
                 <div class="pagination">
@@ -107,6 +116,19 @@
                 </ul>
             </div>
         </div>
+
+        <div class="mobile-top">
+            <div class="mobile-search">
+                <input type="text" class="search" placeholder="Search by name...">
+                <div class="search-clear"></div>
+            </div>
+            <div class="mobile-menu">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
     </main>
     <footer>
         <span>Created by <a href="https://github.com/merowing" target="_blank">merowing</a> for kottans.org @ 2022</span>

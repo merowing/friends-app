@@ -10,6 +10,9 @@ html {
 body {
     position: relative;
 }
+body.overflow {
+    overflow: hidden;
+}
 
 footer {
     height: 40px;
@@ -38,8 +41,8 @@ footer span {
     box-sizing: border-box;
     padding: 0 10px;
     overflow: auto;
-    -webkit-user-select: none;
-    user-select: none;
+    /* -webkit-user-select: none;
+    user-select: none; */
 }
 
 .friendlist {
@@ -366,4 +369,150 @@ fieldset label[for="desc"]::before {
 .filter-ages > select option {
     background-color: white;
     color: black;
+}
+
+.mobile-top {
+    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+.mobile-menu {
+    display: none;
+    top: 0;
+    left: 0;
+    width: 54px;
+    height: 54px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid lightgray;
+}
+.mobile-menu > div {
+    background-color: #b36161;
+    width: 31px;
+    height: 3px;
+    margin: 3px 0;
+}
+.mobile-search {
+    background-color: white;
+    height: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 2;
+    flex: 1;
+    border-bottom: 1px solid lightgray;
+}
+.mobile-search .search {
+    font-size: 20px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 0;
+    outline: none;
+    width: 100%;
+}
+.mobile-close {
+    height: 54px;
+    position: fixed;
+    background-color: white;
+    z-index: 1;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+.mobile-close > div {
+    display: flex;
+    width: 54px;
+    height: 54px;
+    justify-content: center;
+    align-items: center;
+}
+.mobile-close > div > div {
+    width: 31px;
+    height: 3px;
+    background-color: #b36161;
+    margin: 3px 0;
+    position: absolute;
+}
+.mobile-close div.left {
+    transform: rotate(45deg);
+}
+.mobile-close div.right {
+    transform: rotate(-45deg);
+}
+
+/* media queries */
+@media screen and (min-width: 360px) and (max-width: 400px) {
+    .friendlist {
+        margin: 0;
+        padding: 0;
+    }
+    .friendlist > ul {
+        justify-items: center;
+        grid-template-columns: 1fr;
+        padding: 0 40px;
+    }
+    .pagination {
+        position: fixed;
+        bottom: 0;
+        background-color: white;
+        width: 100%;
+        margin: 0;
+        text-align: center;
+        z-index: 1;
+        height: 54px;
+        display: flex;
+        align-items: center;
+        border-top: 1px solid whitesmoke;
+        padding: 0 10px;
+    }
+    .pagination > ul {
+        display: flex;
+        gap: 4px;
+    }
+    .pagination > ul li {
+        margin: 0;
+    }
+    #wrap {
+        padding: 74px 0 74px 0;
+    }
+    footer {
+        display: none;
+    }
+
+    .filter {
+        background-color: white;
+        width: 100%;
+        top: 0;
+        position: fixed;
+        z-index: 2;
+        padding: 0 20px;
+        display: none;
+    }
+    #filter-form {
+        margin-top: 64px;
+    }
+    .filter.visible {
+        display: block;
+    }
+    .filter .logo,
+    .filter-top,
+    .filter-search {
+        display: none;
+    }
+    fieldset label,
+    .filter-ages > select {
+        padding: 12px 0;
+    }
+    .filter-country {
+        height: auto;
+        border: 0;
+        padding: 14px 0;
+        background-color: #b36161;
+    }
+
+    .mobile-menu {
+        display: flex;
+    }
 }
