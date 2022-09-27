@@ -47,7 +47,7 @@ footer span {
 
 .friendlist {
     margin-left: 270px;
-    padding: 50px 0px 40px 60px;
+    padding: 40px 0px 40px 60px;
     flex: 1;
     position: relative;
 }
@@ -132,14 +132,16 @@ fieldset label[for="desc"]::before {
     width: inherit;
     padding-bottom: 20px;
 }
-.logo span {
+.logo span,
+.logo-app {
     margin: 0;
     display: inline-block;
     font-size: 26px;
 }
-.logo span.logo-app {
+.logo .logo-app {
     padding: 4px 12px 7px 0;
     color: yellow;
+    position: relative;
 }
 .logo .logo-cube {
     width: 40px;
@@ -147,8 +149,8 @@ fieldset label[for="desc"]::before {
     background-color: darkgray;
     transform: rotate(20deg);
     position: absolute;
-    top: 23px;
-    right: 80px;
+    top: 0;
+    right: 10px;
     z-index: -1;
 }
 
@@ -300,7 +302,12 @@ fieldset label[for="desc"]::before {
 }
 
 .pagination {
-    margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+    padding: 10px 0 20px 0;
+    margin: 0;
 }
 .pagination ul {
     font-size: 0;
@@ -314,7 +321,7 @@ fieldset label[for="desc"]::before {
     text-align: center;
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
-    margin: 0 0 8px 8px;
+    margin: 0 4px 0 0;
     border: 1px solid lightcoral;
     color: lightcoral;
     -webkit-user-select: none;
@@ -807,5 +814,114 @@ div.mobile-reset {
     }
     .mobile-countries button {
         display: block;
+    }
+}
+@media (min-width: 2100px) {
+    .filter {
+        width: 300px;
+    }
+    fieldset label,
+    .filter-ages select,
+    .filter-country {
+        font-size: 17px;
+    }
+    .filter-ages select {
+        padding: 9px 0;
+    }
+    .filter-title {
+        font-size: 14px;
+    }
+    .pagination li {
+        width: 38px;
+        line-height: 38px;
+        margin: 0 8px 0 0 ;
+    }
+    .friendcard-name {
+        font-size: 22px;
+    }
+    .friendcard-from {
+        font-size: 16px;
+    }
+    footer span {
+        font-size: 13px;
+    }
+}
+@media (min-width: 2300px) {
+    .filter {
+        width: 320px;
+    }
+    .friendlist {
+        margin-left: 320px;
+    }
+    .friendlist > ul {
+        grid-template-columns: repeat(auto-fill, minmax(264px, 1fr));
+        gap: 20px;
+    }
+    .friendlist > ul li {
+        font-size: 1.1em;
+        width: 264px;
+    }
+    
+    .friendcard {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .friendcard > img {
+        height: 40%;
+    }
+    .friendcard > ul {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding-bottom: 20px;
+    }
+    ul li.friendcard-name {
+        flex: 1;
+        font-size: 24px;
+    }
+
+    .pagination li {
+        width: 42px;
+        line-height: 42px;
+        margin: 0 10px 0 0 ;
+    }
+    .filter-top > ul li:first-child {
+        font-size: 26px;
+    }
+    .filter-top button.reset-filter {
+        font-size: 16px;
+    }
+    .filter-search {
+        margin-bottom: 20px;
+    }
+    .filter-search input {
+        font-size: 20px;
+    }
+    .filter-title {
+        font-size: 16px;
+    }
+
+    fieldset label,
+    .filter-ages select {
+        padding: 12px 0;
+        font-size: 19px;
+    }
+    .filter-country {
+        height: 300px;
+        font-size: 19px;
+    }
+
+    .logo span,
+    .logo-app {
+        font-size: 36px;
+    }
+    .logo .logo-cube {
+        width: 54px;
+        height: 54px;
+    }
+
+    footer span {
+        font-size: 15px;
     }
 }

@@ -13,8 +13,9 @@ const searchClear = document.querySelector(".search-clear");
 const friendsNotFoundBlock = document.querySelector('.friends-not-found');
 const selectAgeRanges = document.querySelectorAll('.filter-ages > select');
 
-const perpage = 5;
+const perpage = 10;
 const pagination = document.querySelector('.pagination > ul');
+let paginationOffsetTop = 0;
 
 const mobileSearch = document.querySelector('.mobile-search > input');
 const mobileReset = document.querySelector('.mobile-reset');
@@ -161,6 +162,8 @@ function createPagination() {
     }
 
     if(isMobile) window.scrollTo(0, 0);
+
+    paginationOffsetTop = document.querySelector('.pagination').offsetTop;
 
     createFriendCard();
 }
@@ -432,7 +435,9 @@ pagination.addEventListener("click", e => {
     friendList = filterFriendList(createFilters());
     friendList = friendList.splice(perpage * page, perpage);
 
-    //window.scrollTo(0, 0);
+    if(window.scrollY > paginationOffsetTop) {
+        window.scrollTo(0, paginationOffsetTop);
+    }
     
     createFriendCard();
 });
