@@ -49,6 +49,7 @@ footer span {
     margin-left: 270px;
     padding: 50px 0px 40px 60px;
     flex: 1;
+    position: relative;
 }
 
 ul {
@@ -112,9 +113,9 @@ fieldset input {
 fieldset label[for="desc"]::before,
 fieldset label[for="asc"]::before {
     visibility: visible;
-    position: relative;
-    top: -1px;
-    left: -4px;
+    position: absolute;
+    top: 6px;
+    left: 13px;
 }
 fieldset label[for="asc"]::before {
     content: '\2191';
@@ -122,7 +123,6 @@ fieldset label[for="asc"]::before {
 fieldset label[for="desc"]::before {
     content: '\2193';
 }
-
 .logo {
     height: 80px;
     font-size: 0;
@@ -250,6 +250,10 @@ fieldset label[for="desc"]::before {
 .friendcard img {
     border-radius: 70px;
     margin-top: 20px;
+    display: none;
+}
+.friendcard img.large {
+    display: inline-block;
 }
 .friendcard-title {
     color: lightgray;
@@ -259,6 +263,7 @@ fieldset label[for="desc"]::before {
     font-weight: 700;
     font-size: 20px;
     padding-top: 10px;
+    word-break: break-all;
 }
 .friendcard-from {
     color: #2c2c2c;
@@ -381,7 +386,7 @@ fieldset label[for="desc"]::before {
     border-bottom: 1px solid lightgray;
 }
 .mobile-menu {
-    display: none;
+    display: flex;
     top: 0;
     left: 0;
     width: 54px;
@@ -447,6 +452,17 @@ fieldset label[for="desc"]::before {
 .mobile-reset.hidden {
     display: none;
 }
+div.mobile-reset {
+    width: auto;
+    padding: 0 20px 0 10px;
+}
+.mobile-reset > button {
+    color: lightcoral;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #b36161;
+}
 .mobile-search-clear {
     width: 55px;
     order: 3;
@@ -469,8 +485,22 @@ fieldset label[for="desc"]::before {
     display: none;
 }
 
+.preload {
+    width: 40px;
+    height: 40px;
+    top: 110px;
+    left: 60px;
+    position: absolute;
+}
+.preload.hidden {
+    display: none;
+}
+.preload > img {
+    width: 100%;
+}
+
 /* media queries */
-@media screen and (min-width: 360px) and (max-width: 400px) {
+@media screen and (max-device-aspect-ratio: 1/1) and (min-width: 360px) and (max-width: 420px) {
     .friendlist {
         margin: 0;
         padding: 0;
@@ -490,7 +520,7 @@ fieldset label[for="desc"]::before {
     .friendcard {
         border: 0;
     }
-    .pagination {
+    /* .pagination {
         position: fixed;
         bottom: 0;
         background-color: white;
@@ -510,7 +540,7 @@ fieldset label[for="desc"]::before {
     }
     .pagination > ul li {
         margin: 0;
-    }
+    }*/
     .pagination {
         display: none;
     }
@@ -575,9 +605,6 @@ fieldset label[for="desc"]::before {
         background-color: #b36161;
     }
 
-    .mobile-menu {
-        display: flex;
-    }
     .mobile-close {
         display: flex;
         justify-content: space-between;
@@ -586,15 +613,169 @@ fieldset label[for="desc"]::before {
     .mobile-top {
         display: flex;
     }
-    div.mobile-reset {
-        width: auto;
-        padding: 0 20px 0 10px;
+
+    .preload {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
-    .mobile-reset > button {
-        color: lightcoral;
+}
+@media screen and (min-device-aspect-ratio: 1/1) and (orientation: landscape) and (max-width: 920px) and (max-height: 420px) {
+    #wrap {
+        padding: 74px 0;
+    }
+    .filter {
         background-color: white;
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px solid #b36161;
+        width: 100%;
+        top: 0;
+        position: fixed;
+        z-index: 2;
+        padding: 0 20px;
+        display: none;
+        text-align: center;
+    }
+    .filter.visible {
+        display: block;
+    }
+    .filter-top {
+        display: none;
+    }
+    .filter .logo {
+        padding: 20px 0;
+        position: relative;
+        display: inline-block;
+        width: auto;
+        height: auto;
+    }
+    .filter .logo .logo-cube {
+        top: 26px;
+        right: 16px;
+    }
+    .filter-search {
+        display: none;
+    }
+
+    .friendlist {
+        margin: 0;
+        padding: 0;
+    }
+    .friendlist > ul {
+        justify-items: center;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        padding: 0 10px;
+    }
+    .friendlist > ul > li {
+        width: 200px;
+        height: 274px;
+    }
+    .friendcard {
+        overflow: auto;
+        padding:0 10px 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .friendcard img.large {
+        display: none;
+    }
+    .friendcard img.medium {
+        display: inline-block;
+        width: 72px;
+    }
+    .friendcard > ul {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .friendcard-name {
+        flex: 1;
+    }
+    .friendcard-id {
+        display: none;
+    }
+    .friendcard-birth .age {
+        display: block;
+    }
+    .pagination {
+        display: none;
+    }
+
+    .mobile-top {
+        display: flex;
+        background: none;
+    }
+    .mobile-menu {
+        padding: 0;
+        align-items: center;
+        background-color: white;
+    }
+    .mobile-search .search {
+        text-align: center;
+        width: 320px;
+    }
+
+    #filter-form > ul {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 50px;
+        padding-bottom: 20px;
+    }
+    li.gender {
+        order: 1;
+    }
+    li.sortby {
+        order: 2;
+    }
+    li.updown {
+        order: 3;
+        grid-column: 2 / -1;
+    }
+    li.ages {
+        order: 4;
+    }
+    li.countries {
+        order: 5;
+    }
+    fieldset label,
+    .filter-ages > select {
+        font-size: 16px;
+        padding: 10px 0;
+    }
+
+    fieldset label[for="desc"]::before,
+    fieldset label[for="asc"]::before {
+        visibility: visible;
+        position: absolute;
+        top: 4px;
+        left: 16px;
+        font-size: 20px;
+    }
+    .filter-country {
+        height: auto;
+        border: 0;
+        padding: 11px 0;
+        background-color: #b36161;
+    }
+
+    .mobile-close {
+        display: flex;
+        background: none;
+        justify-content: space-between;
+    }
+    .mobile-close > div {
+        justify-content: center;
+        padding-left: 0;
+        background-color: white;
+    }
+    .friendlist ul.friends-not-found {
+        grid-template-columns: 1fr;
+    }
+
+    .preload {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }

@@ -18,6 +18,7 @@ const pagination = document.querySelector('.pagination > ul');
 
 const mobileSearch = document.querySelector('.mobile-search > input');
 const mobileReset = document.querySelector('.mobile-reset');
+const preload = document.querySelector('.preload');
 let clearAllMobileFilters = false;
 
 let paginationTabs;
@@ -92,11 +93,12 @@ function createFriendCard() {
 
     let fragmentFriendslist = document.createDocumentFragment();
     friendList.forEach(friend => {
-        const {id, gender, picture:{large}, name:{title, fullname}, country, dob:{fulldate, age}} = friend;
+        const {id, gender, picture:{large, medium}, name:{title, fullname}, country, dob:{fulldate, age}} = friend;
         const temp = [
             id,
             gender,
             large,
+            medium,
             title,
             fullname,
             country,
@@ -116,6 +118,8 @@ function createFriendCard() {
     }else {
         friendsNotFoundBlock.classList.add('hidden');
     }
+
+    preload.classList.add('hidden');
 }
 
 function createPagination() {
@@ -172,17 +176,18 @@ function paginationTemplate(pages) {
 }
 
 function friendCardTempalte(friends) {
-    const [id, gender, img, title, name, country, birth, age] = friends;
+    const [id, gender, largeImg, mediumImg, title, name, country, birth, age] = friends;
 
     const template = document.createElement('li');
     template.innerHTML = `
                         <div class="friendcard">
-                            <img src="${img}" alt="${name}">
+                            <img src="${largeImg}" class="large" alt="${name}">
+                            <img src="${mediumImg}" class="medium" alt="${name}">
                             <ul>
                                 <li class="friendcard-title">${title}</li>
                                 <li class="friendcard-name">${name}</li>
                                 <li class="friendcard-from">${country}</li>
-                                <li class="friendcard-birth">${birth} (age ${age})</li>
+                                <li class="friendcard-birth">${birth} <span class="age">(age ${age})</span></li>
                             </ul>
                             <div class="friendcard-id">${(id + 1)}</div>
                             <div class="friendcard-gender-${gender}"></div>
@@ -239,7 +244,12 @@ function resetFilter() {
         countryBlock.selectedIndex = -1;
         clearAllMobileFilters = false;
     }
-    selectAgeRanges.forEach(select => select.selectedIndex = 0);
+    selectAgeRanges.forEach((select, ind) => {
+        select.selectedIndex = 0;
+        if(ind === 1) {
+            select.selectedIndex = select.options.length - 1;
+        }
+    });
     createPagination();
 }
 
@@ -497,9 +507,8 @@ function createAgeRange() {
     ages = ages.filter((age, ind) => ages.indexOf(age) === ind);
     ages.sort();
 
-    const optionsFragment = reverse => {
+    const optionsFragment = () => {
         let agesTemp = ages.slice();
-        if(reverse) agesTemp.reverse();
 
         return agesTemp.reduce((options, age) => {
             const option = document.createElement('option');
@@ -511,7 +520,8 @@ function createAgeRange() {
         }, document.createDocumentFragment());
     };
 
-    selectAgeRanges.forEach((select, ind) => select.appendChild(optionsFragment(!!ind)));
+    selectAgeRanges.forEach(select => select.appendChild(optionsFragment()));
+    selectAgeRanges[1].selectedIndex = ages.length - 1;
 }
 
 // mobile
@@ -551,4 +561,10 @@ mobileSearchClear.addEventListener("click", () => {
     
     mobileSearch.value = '';
     createPagination();
+});
+
+window.addEventListener("orientationchange", () => {
+    if(screen.availWidth > screen.availHeight) {
+        //alert();
+    }
 });
