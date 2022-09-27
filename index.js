@@ -538,6 +538,7 @@ function createAgeRange() {
 const mobileMenu = document.querySelector('.mobile-menu');
 const mobileMenuClose = document.querySelector('.mobile-close > div');
 const mobileSearchClear = document.querySelector('.mobile-search-clear');
+const mobileCountriesClear = document.querySelector('.mobile-clear-countries');
 const filter = document.querySelector('.filter');
 
 mobileMenu.addEventListener("click", () => {
@@ -575,6 +576,11 @@ mobileSearchClear.addEventListener("click", () => {
     mobileSearch.value = '';
     mobileSearch.focus();
     
+    createPagination();
+});
+mobileCountriesClear.addEventListener("click", () => {
+    [...countryBlock.querySelectorAll('option')].forEach(option => option.selected = false);
+
     createPagination();
 });
 

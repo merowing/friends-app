@@ -499,6 +499,23 @@ div.mobile-reset {
     width: 100%;
 }
 
+.mobile-countries {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.mobile-countries > div {
+    flex: 1;
+}
+.mobile-countries button {
+    color: lightcoral;
+    background-color: white;
+    padding: 11px;
+    border-radius: 10px;
+    border: 1px solid #b36161;
+    display: none;
+}
+
 /* media queries */
 @media screen and (max-device-aspect-ratio: 1/1) and (min-width: 360px) and (max-width: 420px) {
     .friendlist {
@@ -622,6 +639,10 @@ div.mobile-reset {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+    .mobile-countries button {
+        padding: 14px 10px;
+        display: block;
     }
 }
 @media screen and (min-device-aspect-ratio: 1/1) and (orientation: landscape) and (max-width: 920px) and (max-height: 420px) {
@@ -783,5 +804,8 @@ div.mobile-reset {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+    .mobile-countries button {
+        display: block;
     }
 }
