@@ -149,7 +149,6 @@ function createPagination() {
 
         paginationTabs = pagination.querySelectorAll('li');
 
-        console.log(createFilters());
         friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
         
         if(activeGender !== filters[0]) {
@@ -160,15 +159,7 @@ function createPagination() {
     }
 
     if(isMobile) window.scrollTo(0, 0);
-
-    paginationTabs = pagination.querySelectorAll('li');
-
-    friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
     
-    if(activeGender !== filters[0]) {
-        activePage = 0;
-    }
-    activeGender = filters[0];
     paginationOffsetTop = document.querySelector('.pagination').offsetTop;
 
     createFriendCard();
