@@ -161,7 +161,6 @@ function createPagination() {
 
     if(isMobile) window.scrollTo(0, 0);
 
-<<<<<<< HEAD
     paginationTabs = pagination.querySelectorAll('li');
 
     friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
@@ -170,9 +169,7 @@ function createPagination() {
         activePage = 0;
     }
     activeGender = filters[0];
-=======
     paginationOffsetTop = document.querySelector('.pagination').offsetTop;
->>>>>>> dev-branch
 
     createFriendCard();
 }
@@ -226,19 +223,9 @@ resetFilterButton.addEventListener('click', e => {
 
 filterForm.addEventListener('change', () => {
     if(!searchPressed) {
-<<<<<<< HEAD
-=======
-        //let filters = createFilters();
-
-        //friendList = filterFriendList(filters);
-
-        // if(activeGender !== filters[0]) {
-        //     activePage = 0;
-        // }
-        // activeGender = filters[0];
         filterChanged = true;
         clearAllMobileFilters = true;
->>>>>>> dev-branch
+        
         createPagination();
     }
     searchPressed = false;
@@ -373,12 +360,7 @@ function filterFriendList(filters) {
 
         }
 
-<<<<<<< HEAD
-        if(index === 3 && filter.indexOf('-1') === -1) {
-=======
         if(index === 3 && filter.indexOf('-1') === -1 && filter.length > 0) {
-            console.log(1, friendList);
->>>>>>> dev-branch
             filter = filter.map(country => country.toLowerCase());
             friendList = friendList.filter(friend => filter.indexOf(friend.country.toLowerCase()) !== -1);
         }
@@ -480,51 +462,32 @@ function createCountryFilter() {
     });
     
     countryBlock.appendChild(countryOptionElement);
-
-
 }
 
 let countryBlockOptionsChecked = [];
 countryBlock.addEventListener("mousedown", e => {
     if(!isMobile) {
-    e.preventDefault();
-    const options = countryBlock.querySelectorAll('option');
-    const index = [...options].indexOf(e.target);
+        e.preventDefault();
+        const options = countryBlock.querySelectorAll('option');
+        const index = [...options].indexOf(e.target);
 
-    if(!index) {
-        [...options].forEach(elem => {
-            elem.selected = false;
-        });
-    }else {
-        if(options[0].selected) options[0].selected = false;
-    
-        e.target.selected = !e.target.selected;
+        if(!index) {
+            [...options].forEach(elem => {
+                elem.selected = false;
+            });
+        }else {
+            if(options[0].selected) options[0].selected = false;
+        
+            e.target.selected = !e.target.selected;
+        }
+
+        if([...options].every(option => !option.selected)) {
+            options[0].selected = true;
+        }
+        
+        scrollTop = countryBlock.scrollTop;
+        setTimeout(() => countryBlock.scrollTo(0, scrollTop), 0);
     }
-
-    if([...options].every(option => !option.selected)) {
-        options[0].selected = true;
-    }
-    
-    scrollTop = countryBlock.scrollTop;
-    setTimeout(() => countryBlock.scrollTo(0, scrollTop), 0);
-<<<<<<< HEAD
-=======
-    }
-    // options[0].selected = false;
-    // options[0].removeAttribute("selected");
-    // options[1].addAttribute("selected", "selected");
-    // options[1].addAttribute("selected", true);
-
-    //activePage = 0;
-    //console.log(createFilters());
-    // friendList = filterFriendList(createFilters());
-
-    // if(parseInt(friendList.length / perpage) <= activePage) {
-    //     activePage = 0;
-    // }
-    
-    // createPagination();
->>>>>>> dev-branch
 });
 countryBlock.addEventListener("click", e => {
     if(e.target.tagName === 'OPTION') {
@@ -554,7 +517,6 @@ function createAgeRange() {
 }
 
 // mobile
-//const mobileApplyButton = document.querySelector('.mobile-apply');
 const mobileMenu = document.querySelector('.mobile-menu');
 const mobileMenuClose = document.querySelector('.mobile-close > div');
 const mobileSearchClear = document.querySelector('.mobile-search-clear');
@@ -569,16 +531,10 @@ mobileMenuClose.addEventListener("click", () => {
     filter.classList.remove('visible');
     document.body.classList.remove('overflow');
     
-    
     if(filterChanged) window.scrollTo(0, 0);
     filterChanged = false;
 });
 mobileSearch.addEventListener("keyup", () => {
-    // friendList = filterFriendList(createFilters());
-
-    // if(friendList.length / perpage <= activePage) {
-    //     activePage = 0;
-    // }
     mobileSearchClear.classList.remove('hidden');
     if(mobileSearch.value === '') mobileSearchClear.classList.add('hidden');
 
@@ -594,7 +550,6 @@ mobileSearchClear.addEventListener("click", () => {
     mobileSearchClear.classList.add('hidden');
     
     mobileSearch.value = '';
-    //mobileSearch.focus();
     
     createPagination();
 });
@@ -603,9 +558,3 @@ mobileCountriesClear.addEventListener("click", () => {
 
     createPagination();
 });
-
-// window.addEventListener("orientationchange", () => {
-//     if(screen.availWidth > screen.availHeight) {
-//         //alert();
-//     }
-// });
