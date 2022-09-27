@@ -17,6 +17,8 @@ const perpage = 5;
 const pagination = document.querySelector('.pagination > ul');
 
 const mobileSearch = document.querySelector('.mobile-search > input');
+const mobileReset = document.querySelector('.mobile-reset');
+let clearAllMobileFilters = false;
 
 let paginationTabs;
 let activePage = 0;
@@ -122,33 +124,36 @@ function createPagination() {
     let filters = createFilters();
     friendList = filterFriendList(filters);
     
-    let pagesCount = friendList.length / perpage;
-    let pagesCountInt = parseInt(pagesCount);
-    
-    if(pagesCountInt * perpage < perpage) {
-        pagesCount = 1;
-    }
-    if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0)) {
-        pagesCountInt += 1;
-    }
-    pagesCountInt = pagesCountInt || 1;
-    
-    if(pagesCount <= activePage) {
-        activePage = 0;
-    }
+    if(!isMobile) {
+        let pagesCount = friendList.length / perpage;
+        let pagesCountInt = parseInt(pagesCount);
+        
+        if(pagesCountInt * perpage < perpage) {
+            pagesCount = 1;
+        }
+        if(pagesCount % 1 < 1 && (pagesCount % 1 !== 0)) {
+            pagesCountInt += 1;
+        }
+        pagesCountInt = pagesCountInt || 1;
+        
+        if(pagesCount <= activePage) {
+            activePage = 0;
+        }
 
-    const tabs = paginationTemplate(pagesCountInt);
-    pagination.appendChild(tabs);
+        const tabs = paginationTemplate(pagesCountInt);
+        pagination.appendChild(tabs);
 
-    paginationTabs = pagination.querySelectorAll('li');
-alert(filters);
-    console.log(createFilters());
-    friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
-    
-    if(activeGender !== filters[0]) {
-        activePage = 0;
+        paginationTabs = pagination.querySelectorAll('li');
+
+        console.log(createFilters());
+        friendList = friendList.slice(activePage * perpage, (activePage + 1) * perpage);
+        
+        if(activeGender !== filters[0]) {
+            activePage = 0;
+        }
+        activeGender = filters[0];
+
     }
-    activeGender = filters[0];
 
     createFriendCard();
 }
@@ -209,7 +214,7 @@ filterForm.addEventListener('change', () => {
         //     activePage = 0;
         // }
         // activeGender = filters[0];
-
+        clearAllMobileFilters = true;
         createPagination();
     }
     searchPressed = false;
@@ -230,6 +235,10 @@ function resetFilter() {
     activeGender = 'both';
 
     countryBlock.selectedIndex = 0;
+    if(isMobile) {
+        countryBlock.selectedIndex = -1;
+        clearAllMobileFilters = false;
+    }
     selectAgeRanges.forEach(select => select.selectedIndex = 0);
     createPagination();
 }
@@ -244,7 +253,12 @@ function createFilters() {
     }, []);
 
     let searchValue = filters.splice(0, 1)[0];
-    if(isMobile) searchValue = mobileSearch.value;
+    if(isMobile) {
+        searchValue = mobileSearch.value;        
+        if(clearAllMobileFilters) {
+            mobileReset.classList.remove('hidden');
+        }
+    }
     searchValue = searchValue.toLowerCase();
 
     const selectedCountry = [...countryBlock.querySelectorAll('option')].reduce((countries, option) => {
@@ -503,7 +517,8 @@ function createAgeRange() {
 // mobile
 //const mobileApplyButton = document.querySelector('.mobile-apply');
 const mobileMenu = document.querySelector('.mobile-menu');
-const mobileMenuClose = document.querySelector('.mobile-close');
+const mobileMenuClose = document.querySelector('.mobile-close > div');
+const mobileSearchClear = document.querySelector('.mobile-search-clear');
 const filter = document.querySelector('.filter');
 
 mobileMenu.addEventListener("click", () => {
@@ -513,13 +528,27 @@ mobileMenu.addEventListener("click", () => {
 mobileMenuClose.addEventListener("click", () => {
     filter.classList.remove('visible');
     document.body.classList.remove('overflow');
+    window.scrollTo(0, 0);
 });
 mobileSearch.addEventListener("keyup", () => {
-    friendList = filterFriendList(createFilters());
+    // friendList = filterFriendList(createFilters());
 
-    if(friendList.length / perpage <= activePage) {
-        activePage = 0;
-    }
+    // if(friendList.length / perpage <= activePage) {
+    //     activePage = 0;
+    // }
+    mobileSearchClear.classList.remove('hidden');
 
+    createPagination();
+});
+mobileReset.addEventListener("click", e => {
+    e.preventDefault();
+    mobileReset.classList.add('hidden');
+
+    resetFilter();
+});
+mobileSearchClear.addEventListener("click", () => {
+    mobileSearchClear.classList.add('hidden');
+    
+    mobileSearch.value = '';
     createPagination();
 });
