@@ -604,6 +604,9 @@ div.mobile-reset {
         padding: 14px 0;
         background-color: #b36161;
     }
+    .filter-country.empty {
+        background-color: lightcoral;
+    }
 
     .mobile-close {
         display: flex;
@@ -756,6 +759,9 @@ div.mobile-reset {
         border: 0;
         padding: 11px 0;
         background-color: #b36161;
+    }
+    .filter-country.empty {
+        background-color: lightcoral;
     }
 
     .mobile-close {

@@ -20,6 +20,7 @@ const mobileSearch = document.querySelector('.mobile-search > input');
 const mobileReset = document.querySelector('.mobile-reset');
 const preload = document.querySelector('.preload');
 let clearAllMobileFilters = false;
+let filterChanged = false;
 
 let paginationTabs;
 let activePage = 0;
@@ -33,7 +34,7 @@ loadFriendsData();
 
 function loadFriendsData() {
     const SEED = 'abc';
-    const results = 20;
+    const results = 100;
     const listOfMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const url = `https://randomuser.me/api/?results=${results}&seed=${SEED}&exc=login,id`;
@@ -159,6 +160,8 @@ function createPagination() {
 
     }
 
+    if(isMobile) window.scrollTo(0, 0);
+
     createFriendCard();
 }
 
@@ -219,6 +222,7 @@ filterForm.addEventListener('change', () => {
         //     activePage = 0;
         // }
         // activeGender = filters[0];
+        filterChanged = true;
         clearAllMobileFilters = true;
         createPagination();
     }
@@ -262,19 +266,24 @@ function createFilters() {
         return params;
     }, []);
 
+    const selectedCountry = [...countryBlock.querySelectorAll('option')].reduce((countries, option) => {
+        if(option.selected) countries.push(option.value);
+        return countries;
+    }, []);
+
     let searchValue = filters.splice(0, 1)[0];
     if(isMobile) {
         searchValue = mobileSearch.value;        
         if(clearAllMobileFilters) {
             mobileReset.classList.remove('hidden');
         }
+
+        countryBlock.classList.remove('empty');
+        if(!selectedCountry.length) {
+            countryBlock.classList.add('empty');
+        }
     }
     searchValue = searchValue.toLowerCase();
-
-    const selectedCountry = [...countryBlock.querySelectorAll('option')].reduce((countries, option) => {
-        if(option.selected) countries.push(option.value);
-        return countries;
-    }, []);
 
     const ageRange = [...selectAgeRanges].map(age => {
         return age.options[age.selectedIndex].text;
@@ -401,7 +410,7 @@ function clearSearch() {
     search.value = "";
     searchClear.classList.remove("visible");
     searchPressed = false;
-;
+
     friendList = defaultFriendList.slice();
 
     friendList = filterFriendList(createFilters());
@@ -423,7 +432,7 @@ pagination.addEventListener("click", e => {
     friendList = filterFriendList(createFilters());
     friendList = friendList.splice(perpage * page, perpage);
 
-    window.scrollTo(0, 0);
+    //window.scrollTo(0, 0);
     
     createFriendCard();
 });
@@ -538,7 +547,10 @@ mobileMenu.addEventListener("click", () => {
 mobileMenuClose.addEventListener("click", () => {
     filter.classList.remove('visible');
     document.body.classList.remove('overflow');
-    window.scrollTo(0, 0);
+    
+    
+    if(filterChanged) window.scrollTo(0, 0);
+    filterChanged = false;
 });
 mobileSearch.addEventListener("keyup", () => {
     // friendList = filterFriendList(createFilters());
@@ -547,6 +559,7 @@ mobileSearch.addEventListener("keyup", () => {
     //     activePage = 0;
     // }
     mobileSearchClear.classList.remove('hidden');
+    if(mobileSearch.value === '') mobileSearchClear.classList.add('hidden');
 
     createPagination();
 });
@@ -560,11 +573,13 @@ mobileSearchClear.addEventListener("click", () => {
     mobileSearchClear.classList.add('hidden');
     
     mobileSearch.value = '';
+    mobileSearch.focus();
+    
     createPagination();
 });
 
-window.addEventListener("orientationchange", () => {
-    if(screen.availWidth > screen.availHeight) {
-        //alert();
-    }
-});
+// window.addEventListener("orientationchange", () => {
+//     if(screen.availWidth > screen.availHeight) {
+//         //alert();
+//     }
+// });
