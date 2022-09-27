@@ -10,10 +10,21 @@
     <main>
         <div id="wrap">
             <div class="filter">
+                <div class="mobile-close">
+                    <div>
+                        <div class="left"></div>
+                        <div class="right"></div>
+                    </div>
+                    <div class="mobile-reset hidden">
+                        <button type="button">Clear all filters</button>
+                    </div>
+                </div>
                 <div class="logo">
                     <span>Friends</span>
-                    <span class="logo-app">app</span>
-                    <div class="logo-cube"></div>
+                    <div class="logo-app">
+                        <span>app</span>
+                        <div class="logo-cube"></div>
+                    </div>
                 </div>
                 <form id="filter-form">
                 <div class="filter-top">
@@ -27,7 +38,7 @@
                     <div class="search-clear"></div>
                 </div>
                 <ul>
-                    <li>
+                    <li class="gender">
                         <div class="filter-title">Select a gender</div>
                         <fieldset id="gender">
                             <div>
@@ -44,7 +55,7 @@
                             </div>
                         </fieldset>
                     </li>
-                    <li>
+                    <li class="sortby">
                         <div class="filter-title">Sort by</div>
                         <fieldset id="sort">
                             <div>
@@ -61,7 +72,7 @@
                             </div>
                         </fieldset>
                     </li>
-                    <li>
+                    <li class="updown">
                         <fieldset id="updown">
                             <div>
                                 <input type="radio" id="asc" name="updown" value="0">
@@ -77,7 +88,7 @@
                             </div>
                         </fieldset>
                     </li>
-                    <li>
+                    <li class="ages">
                         <div class="filter-title">Select an age</div>
                         <div class="filter-ages">
                             <select name="age-min" aria-label="age-min">
@@ -86,12 +97,14 @@
                             </select>
                         </div>
                     </li>
-                    <li>
+                    <li class="countries">
                         <div class="filter-title">Select countries</div>
-                        <div>
-                            <select name="country" class="filter-country" aria-label="countries" multiple>
-                                <option value="-1" selected>Select all</option>
-                            </select>
+                        <div class="mobile-countries">
+                            <div>
+                                <select name="country" class="filter-country" aria-label="countries" multiple>
+                                </select>
+                            </div>
+                            <button type="button" class="mobile-clear-countries">Clear</button>
                         </div>
                     </li>
                 </ul>
@@ -105,6 +118,23 @@
                 <ul class="friends-not-found hidden">
                     <li>Friends not found!</li>
                 </ul>
+                <div class="preload">
+                    <img src="./images/loading-gif.gif" alt="loading-image">
+                </div>
+            </div>
+        </div>
+        <div class="mobile-top">
+            <div class="mobile-search">
+                <input type="text" class="search" placeholder="Search by name...">
+            </div>
+            <div class="mobile-menu">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="mobile-search-clear hidden">
+                <div class="left"></div>
+                <div class="right"></div>
             </div>
         </div>
     </main>
