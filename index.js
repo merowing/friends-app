@@ -35,7 +35,7 @@ loadFriendsData();
 
 function loadFriendsData() {
     const SEED = 'abc';
-    const results = 100;
+    const results = 40;
     const listOfMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const url = `https://randomuser.me/api/?results=${results}&seed=${SEED}&exc=login,id`;
@@ -579,7 +579,7 @@ mobileSearchClear.addEventListener("click", () => {
     mobileSearchClear.classList.add('hidden');
     
     mobileSearch.value = '';
-    mobileSearch.focus();
+    //mobileSearch.focus();
     
     createPagination();
 });
