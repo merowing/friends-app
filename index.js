@@ -84,6 +84,7 @@ function loadFriendsData() {
     })
     .catch(error => {
         console.log(error);
+        alert(error);
         error.then(data => console.log(data));
     });
 }
@@ -93,7 +94,8 @@ function createFriendCard() {
     const friendListBlock = document.querySelector('.friendlist > ul');
     friendListBlock.innerHTML = "";
 
-    let fragmentFriendslist = document.createDocumentFragment();
+    //let fragmentFriendslist = document.createDocumentFragment();
+    let fragmentFriendslist = [];
     friendList.forEach(friend => {
         const {id, gender, picture:{large, medium}, name:{title, fullname}, country, dob:{fulldate, age}} = friend;
         const temp = [
@@ -109,10 +111,12 @@ function createFriendCard() {
         ];
 
         const template = friendCardTempalte(temp);
-        fragmentFriendslist.appendChild(template);
+        fragmentFriendslist.push(template);
+        //fragmentFriendslist.appendChild(template);
     });
 
-    friendListBlock.appendChild(fragmentFriendslist);
+    //friendListBlock.appendChild(fragmentFriendslist);
+    friendListBlock.innerHTML = fragmentFriendslist.join('');
 
     if(!friendList.length) {
         friendsNotFoundBlock.classList.remove('hidden');
@@ -147,7 +151,8 @@ function createPagination() {
         }
 
         const tabs = paginationTemplate(pagesCountInt);
-        pagination.appendChild(tabs);
+        //pagination.appendChild(tabs);
+        pagination.innerHTML = tabs;
 
         paginationTabs = pagination.querySelectorAll('li');
 
@@ -169,38 +174,45 @@ function createPagination() {
 }
 
 function paginationTemplate(pages) {
-    let pagesFragment = document.createDocumentFragment();
+    // let pagesFragment = document.createDocumentFragment();
 
+    // for(let i = 0; i < pages; i++) {
+    //     let elem = document.createElement('li');
+    //     if(i === activePage) elem.classList.add('active');
+    //     elem.innerText = i + 1;
+    //     pagesFragment.appendChild(elem);
+    // }
+
+    // return pagesFragment;
+
+    let paginationsHtml = [];
     for(let i = 0; i < pages; i++) {
-        let elem = document.createElement('li');
-        if(i === activePage) elem.classList.add('active');
-        elem.innerText = i + 1;
-        pagesFragment.appendChild(elem);
+      paginationsHtml.push(`<li ${(i === activePage) ? "class='active'" : ""}>${i + 1}</li>`);
     }
 
-    return pagesFragment;
+    return paginationsHtml.join('');
 }
 
 function friendCardTempalte(friends) {
     const [id, gender, largeImg, mediumImg, title, name, country, birth, age] = friends;
 
-    const template = document.createElement('li');
-    template.innerHTML = `
-                        <div class="friendcard">
-                            <img src="${largeImg}" class="large" alt="${name}">
-                            <img src="${mediumImg}" class="medium" alt="${name}">
-                            <ul>
-                                <li class="friendcard-title">${title}</li>
-                                <li class="friendcard-name">${name}</li>
-                                <li class="friendcard-from">${country}</li>
-                                <li class="friendcard-birth">${birth} <span class="age">(age ${age})</span></li>
-                            </ul>
-                            <div class="friendcard-id">${(id + 1)}</div>
-                            <div class="friendcard-gender-${gender}"></div>
-                        </div>
-                    </li>
-                    `;
-    return template;
+    //const template = document.createElement('li');
+    return `<li>
+              <div class="friendcard">
+                  <img src="${largeImg}" class="large" alt="${name}">
+                  <img src="${mediumImg}" class="medium" alt="${name}">
+                  <ul>
+                      <li class="friendcard-title">${title}</li>
+                      <li class="friendcard-name">${name}</li>
+                      <li class="friendcard-from">${country}</li>
+                      <li class="friendcard-birth">${birth} <span class="age">(age ${age})</span></li>
+                  </ul>
+                  <div class="friendcard-id">${(id + 1)}</div>
+                  <div class="friendcard-gender-${gender}"></div>
+              </div>
+            </li>
+            `;
+    //return template;
 }
 
 const filterForm = document.querySelector('#filter-form');
@@ -233,66 +245,118 @@ filterForm.addEventListener('change', () => {
 });
 
 function resetFilter() {
-    const defaultFilterValues = ['both', 'none1', 'none2'];
 
-    filterInputs.forEach(item => {
-        if(item.getAttribute("type") === "text") item.value = "";
+    const defaultFilters = {
+      gender: 'both',
+      sortby: '-1',
+      updown: '-1',
+      ageMin: 0,
+      ageMax: -1,
+      country: 0,
+      searchValue: ''
+    };
 
-        item.checked = false;
-        if(defaultFilterValues.indexOf(item.id) >= 0) item.checked = true;
-    });
+    for(const key in defaultFilters) {
+      const formElements = filterForm.querySelectorAll(`*[name=${key}]`);
+      
+      formElements.forEach(elem => {
+        if(elem.type.indexOf('radio') >= 0 && elem.value === defaultFilters[key]) {
+          elem.checked = true;
+        }
+        if(elem.type.indexOf('select') >= 0) {
+          if(key === 'country' || key === 'ageMix') elem.selectedIndex = defaultFilters[key];
+          if(key === 'ageMax') elem.selectedIndex = elem.options.length - 1;
+        }
+        if(elem.type.indexOf('text') >= 0) {
+          elem.value = "";
+        }
+      });
+    }
+
+    // console.log(filterForm.querySelector("*[name=gender]"));
+
+    // const defaultFilterValues = ['both', 'none1', 'none2'];
+
+    // filterInputs.forEach(item => {
+    //     if(item.getAttribute("type") === "text") item.value = "";
+
+    //     item.checked = false;
+    //     if(defaultFilterValues.indexOf(item.id) >= 0) item.checked = true;
+    // });
 
     friendList = defaultFriendList.slice();
     activePage = 0;
     activeGender = 'both';
 
-    countryBlock.selectedIndex = 0;
+    //countryBlock.selectedIndex = 0;
     if(isMobile) {
         countryBlock.selectedIndex = -1;
         clearAllMobileFilters = false;
     }
-    selectAgeRanges.forEach((select, ind) => {
-        select.selectedIndex = 0;
-        if(ind === 1) {
-            select.selectedIndex = select.options.length - 1;
-        }
-    });
+    // selectAgeRanges.forEach((select, ind) => {
+    //     select.selectedIndex = 0;
+    //     if(ind === 1) {
+    //         select.selectedIndex = select.options.length - 1;
+    //     }
+    // });
     createPagination();
 }
 
 function createFilters() {
-    const filters = [...filterInputs.values()].reduce((params, item) => {
-        if(item.checked || item.type === 'text') {
-            params.push(item.value);
-        }
 
-        return params;
-    }, []);
+    const filters = {};
+    const formEntries = new FormData(filterForm);
 
-    const selectedCountry = [...countryBlock.querySelectorAll('option')].reduce((countries, option) => {
-        if(option.selected) countries.push(option.value);
-        return countries;
-    }, []);
+    for(let [key, value] of formEntries.entries()) {
+      if(key === "country" && filters[key]) {
+        filters[key] = filters[key] + ',' + value;
+      }else {
+        filters[key] = value;
+      }
+    }
+    //console.log(o);
 
-    let searchValue = filters.splice(0, 1)[0];
+    // const filters = [...filterInputs.values()].reduce((params, item) => {
+    //     if(item.checked || item.type === 'text') {
+    //         params.push(item.value);
+    //     }
+
+    //     return params;
+    // }, []);
+
+    // const selectedCountry = [...countryBlock.querySelectorAll('option')].reduce((countries, option) => {
+    //     if(option.selected) countries.push(option.value);
+    //     return countries;
+    // }, []);
+
+    //let searchValue = search.value;//filters.splice(0, 1)[0];
+
     if(isMobile) {
-        searchValue = mobileSearch.value;        
+        //searchValue = mobileSearch.value;        
+        filters['searchValue'] = mobileSearch.value.toLowerCase();
         if(clearAllMobileFilters) {
             mobileReset.classList.remove('hidden');
         }
 
         countryBlock.classList.remove('empty');
-        if(!selectedCountry.length) {
+        if(filters.country === "-1") {
             countryBlock.classList.add('empty');
         }
     }
-    searchValue = searchValue.toLowerCase();
+    //searchValue = searchValue.toLowerCase();
+    //filters['searchValue'] = searchValue;
 
-    const ageRange = [...selectAgeRanges].map(age => {
-        return age.options[age.selectedIndex].text;
-    });
+    // const ageRange = [...selectAgeRanges].map(age => {
+    //     return age.options[age.selectedIndex].text;
+    // });
 
-    return [...filters, selectedCountry, ageRange, searchValue];
+    // console.log(o);
+    // for(const key in o) {
+    //   console.log(key);
+    // }
+
+    //return [...filters, selectedCountry, ageRange, searchValue];
+    return filters;
 }
 
 function filterFriendList(filters) {
@@ -306,79 +370,160 @@ function filterFriendList(filters) {
      * 4 - search value
     */
 
-    filters.forEach((filter, index) => {
-        if(index === 0) {
-            friendList = friendList.filter(friend => filter === 'both' || friend.gender === filter);
-        }
-
-        if(index === 1 && !isNaN(+filters[2]) && +filters[1] !== -1 && +filters[2] !== -1) {
-            if(filter === 'age') {
-                friendList.sort((friend1, friend2) => {
-                    return (!+filters[2]) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
-                });
+    const { gender, sortby, updown, ageMin, ageMax, country, searchValue } = filters;
+    for(const key in filters) {
+      if(filters.hasOwnProperty(key)) {
+        
+        switch(key) {
+          case 'gender':
+            friendList = friendList.filter(friend => gender === 'both' || friend.gender === gender);
+            break;
+          case 'sortby':
+            if(parseInt(updown) !== -1) {
+              const sortKey = sortby;
+              switch(sortKey) {
+                case 'name':
+                  friendList.sort((friend1, friend2) => {
+      
+                      let name1 = friend1.name.fullname;
+                      let name2 = friend2.name.fullname;
+      
+                      let n = 0;
+                      while(name1.slice(0, n) === name2.slice(0, n)) {
+                          n += 1;
+                      }
+      
+                      name1 = name1.slice(0, n);
+                      name2 = name2.slice(0, n);
+      
+                      const condition = (!+updown) ? name1 > name2 : name2 > name1;
+      
+                      return condition ? 1 : -1;
+                  });
+                  break;
+                case 'age':
+                  friendList.sort((friend1, friend2) => {
+                    return (!parseInt(updown)) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
+                  });
+                  console.log(friendList);
+                  break;
+              }
             }
+            break;
+          case 'updown':
+            if(parseInt(updown) !== -1 && parseInt(sortby) === -1) {
+              if(gender === 'both') {
 
-            if(filter === 'name') {
-                friendList.sort((friend1, friend2) => {
-    
-                    let name1 = friend1.name.fullname;
-                    let name2 = friend2.name.fullname;
-    
-                    let n = 0;
-                    while(name1.slice(0, n) === name2.slice(0, n)) {
-                        n += 1;
-                    }
-    
-                    name1 = name1.slice(0, n);
-                    name2 = name2.slice(0, n);
-    
-                    const condition = (!+filters[2]) ? name1 > name2 : name2 > name1;
-    
-                    return condition ? 1 : -1;            
-                });
-            }
-        }
-
-        if(index === 2 && !isNaN(+filters[2]) && +filters[1] === -1 && +filters[2] !== -1) {
-            
-            if(filters[0] === 'both') {
-                // variable next need for to keep order
-                let next = 0;
-                const gender = (!+filters[2]) ? 'female' : 'male';
+                let separation = 0;
+                const genderFirst = (!+updown) ? 'female' : 'male';
                 friendList = friendList.reduce((friends, person) => {
-                    if(person.gender === gender) {
-                        friends = [...friends.slice(0, next), person, ...friends.slice(next)];
-                        next += 1;
+                    if(person.gender === genderFirst) {
+                        friends = [...friends.slice(0, separation), person, ...friends.slice(separation)];
+                        separation += 1;
                     }else {
                         friends.push(person);
                     }
                     return friends;
                 }, []);
-            }else {
-                friendList = (+filters[2] && +filters[2] !== -1) ? friendList.reverse() : friendList;
+              }else {
+                  friendList = (parseInt(updown) && parseInt(updown) !== -1) ? friendList.reverse() : friendList;
+              }
             }
-
+            break;
+          case 'ageMin':
+          case 'ageMax':
+            let [min, max] = [parseInt(ageMin), parseInt(ageMax)];
+            if(parseInt(ageMin) > parseInt(ageMax)) {
+              [min, max] = [ageMax, ageMin];
+            }
+            friendList = friendList.filter(friend => friend.dob.age >= min && friend.dob.age <= max);
+            break;
+          case 'country':
+            const countries = country.toLowerCase().split(',').map(country => country);
+            friendList = friendList.filter(friend => countries.indexOf(friend.country.toLowerCase()) !== -1 || country === "-1");
+            break;
+          case 'searchValue':
+            friendList = friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(searchValue) >= 0);
+            break;
         }
-
-        if(index === 3 && filter.indexOf('-1') === -1 && filter.length > 0) {
-            console.log(1, friendList);
-            filter = filter.map(country => country.toLowerCase());
-            friendList = friendList.filter(friend => filter.indexOf(friend.country.toLowerCase()) !== -1);
-            console.log(friendList);
-        }
-
-        if(index === 4) {
-            if(+filter[0] > +filter[1]) filter.reverse();
-
-            friendList = friendList.filter(friend => friend.dob.age >= +filter[0] && friend.dob.age <= +filter[1]);
-        }
-
-        if(index === 5 && filter !== '') {
-            friendList = friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(filter) >= 0);
-        }
-    });
+      }
+    }
 
     return friendList;
+
+    // filters.forEach((filter, index) => {
+    //     if(index === 0) {
+    //         friendList = friendList.filter(friend => filter === 'both' || friend.gender === filter);
+    //     }
+
+    //     if(index === 1 && !isNaN(+filters[2]) && +filters[1] !== -1 && +filters[2] !== -1) {
+    //         if(filter === 'age') {
+    //             friendList.sort((friend1, friend2) => {
+    //                 return (!+filters[2]) ? friend1.dob.age - friend2.dob.age : friend2.dob.age - friend1.dob.age;
+    //             });
+    //         }
+
+    //         if(filter === 'name') {
+    //             friendList.sort((friend1, friend2) => {
+    
+    //                 let name1 = friend1.name.fullname;
+    //                 let name2 = friend2.name.fullname;
+    
+    //                 let n = 0;
+    //                 while(name1.slice(0, n) === name2.slice(0, n)) {
+    //                     n += 1;
+    //                 }
+    
+    //                 name1 = name1.slice(0, n);
+    //                 name2 = name2.slice(0, n);
+    
+    //                 const condition = (!+filters[2]) ? name1 > name2 : name2 > name1;
+    
+    //                 return condition ? 1 : -1;            
+    //             });
+    //         }
+    //     }
+
+    //     if(index === 2 && !isNaN(+filters[2]) && +filters[1] === -1 && +filters[2] !== -1) {
+            
+    //         if(filters[0] === 'both') {
+    //             // variable next need for to keep order
+    //             let separation = 0;
+    //             const gender = (!+filters[2]) ? 'female' : 'male';
+    //             friendList = friendList.reduce((friends, person) => {
+    //                 if(person.gender === gender) {
+    //                     friends = [...friends.slice(0, next), person, ...friends.slice(separation)];
+    //                     separation += 1;
+    //                 }else {
+    //                     friends.push(person);
+    //                 }
+    //                 return friends;
+    //             }, []);
+    //         }else {
+    //             friendList = (+filters[2] && +filters[2] !== -1) ? friendList.reverse() : friendList;
+    //         }
+
+    //     }
+
+    //     if(index === 3 && filter.indexOf('-1') === -1 && filter.length > 0) {
+    //         console.log(1, friendList);
+    //         filter = filter.map(country => country.toLowerCase());
+    //         friendList = friendList.filter(friend => filter.indexOf(friend.country.toLowerCase()) !== -1);
+    //         console.log(friendList);
+    //     }
+
+    //     if(index === 4) {
+    //         if(+filter[0] > +filter[1]) filter.reverse();
+
+    //         friendList = friendList.filter(friend => friend.dob.age >= +filter[0] && friend.dob.age <= +filter[1]);
+    //     }
+
+    //     if(index === 5 && filter !== '') {
+    //         friendList = friendList.filter(friend => friend.name.fullname.toLowerCase().indexOf(filter) >= 0);
+    //     }
+    // });
+
+    // return friendList;
 }
 
 search.addEventListener("keyup", () => {
@@ -447,23 +592,28 @@ function createCountryFilter() {
 
     // mobile
     if(!isMobile) {
-        const firstElem = document.createElement('option');
-        firstElem.value = "-1";
-        firstElem.text = "Select all";
-        firstElem.setAttribute("selected", "");
-        countryBlock.appendChild(firstElem);
+        // const firstElem = document.createElement('option');
+        // firstElem.value = "-1";
+        // firstElem.text = "Select all";
+        // firstElem.setAttribute("selected", "");
+        // countryBlock.appendChild(firstElem);
+        countryBlock.innerHTML = `<option value="-1" selected>Select all</option>`;
     }
     // mobile
 
     countries.sort();
+    const countryOptions = [];
     countries.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item;
-        option.innerText = item;
-        countryOptionElement.appendChild(option);
+        // const option = document.createElement('option');
+        // option.value = item;
+        // option.innerText = item;
+        // countryOptionElement.appendChild(option);
+        const option = `<option value=${item}>${item}</option>`;
+        countryOptions.push(option);
     });
     
-    countryBlock.appendChild(countryOptionElement);
+    //countryBlock.appendChild(countryOptionElement);
+    countryBlock.innerHTML += countryOptions.join('');
 
 
 }
@@ -521,20 +671,27 @@ function createAgeRange() {
     ages = ages.filter((age, ind) => ages.indexOf(age) === ind);
     ages.sort();
 
-    const optionsFragment = () => {
+    //const options = () => {
         let agesTemp = ages.slice();
 
-        return agesTemp.reduce((options, age) => {
-            const option = document.createElement('option');
-            option.value = age;
-            option.text = age;
+        // return agesTemp.reduce((options, age) => {
+        //     const option = document.createElement('option');
+        //     option.value = age;
+        //     option.text = age;
 
-            options.appendChild(option);
-            return options;
-        }, document.createDocumentFragment());
-    };
+        //     options.appendChild(option);
+        //     return options;
+        // }, document.createDocumentFragment());
 
-    selectAgeRanges.forEach(select => select.appendChild(optionsFragment()));
+        const options = agesTemp.reduce((options, age) => {
+          const option = `<option value="${age}">${age}</option>`;
+          options.push(option);
+
+          return options;
+        }, []);
+    //};
+
+    selectAgeRanges.forEach(select => select.innerHTML = options.join(''));
     selectAgeRanges[1].selectedIndex = ages.length - 1;
 }
 
