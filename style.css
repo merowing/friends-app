@@ -41,8 +41,8 @@ footer span {
     box-sizing: border-box;
     padding: 0 10px;
     overflow: auto;
-    /* -webkit-user-select: none;
-    user-select: none; */
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .friendlist {
@@ -537,10 +537,6 @@ div.mobile-reset {
         width: 100%;
         border-bottom: 1px solid lightgray;
     }
-    /* .friendlist > ul > li:first-child {
-        border-top: 0;
-    } */
-
     .friendcard {
         display: flex;
         flex-direction: column;
@@ -582,7 +578,6 @@ div.mobile-reset {
         left: 16px;
         font-size: 20px;
     }
-
     .filter {
         background-color: white;
         width: 100%;

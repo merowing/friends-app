@@ -24,9 +24,9 @@ const mobileCheck = function () {
   const mobileReset = document.querySelector(".mobile-reset");
   const preload = document.querySelector(".preload");
   
+  const perpage = 10;
   let defaultFriendList = [];
   let activeGender = "both";
-  const perpage = 5;
   let paginationOffsetTop = 0;
   let activePage = 0;
   let clearAllMobileFilters = false;
@@ -37,7 +37,7 @@ const mobileCheck = function () {
   
   function loadDatabase() {
     const SEED = "abc";
-    const results = 10;
+    const results = 50;
     const url = `https://randomuser.me/api/?results=${results}&seed=${SEED}&exc=login,id`;
   
     fetch(url)
@@ -341,12 +341,12 @@ const mobileCheck = function () {
               const sortKey = sortby;
               switch (sortKey) {
                 case "name":
-                  friendList.sort((firstFriend, secondFriend) => {
-                    let firstName = firstFriend.name.fullname;
-                    let secondName = secondFriend.name.fullname;
+                  friendList.sort((first, second) => {
+                    let firstName = first.name.fullname;
+                    let secondName = second.name.fullname;
   
                     let n = 0;
-                    while (firstName.slice(0, n) === secondFriend.slice(0, n)) {
+                    while (firstName.slice(0, n) === secondName.slice(0, n)) {
                       n += 1;
                     }
   
